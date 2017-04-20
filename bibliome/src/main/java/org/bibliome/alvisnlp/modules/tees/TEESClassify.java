@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,13 +19,13 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.bibliome.util.Files;
+import org.bibliome.util.files.InputDirectory;
 import org.bibliome.util.files.OutputFile;
 import org.codehaus.plexus.util.DirectoryScanner;
 
 import alvisnlp.corpus.Corpus;
 import alvisnlp.corpus.DefaultNames;
 import alvisnlp.corpus.NameType;
-import alvisnlp.corpus.expressions.EvaluationContext;
 import alvisnlp.corpus.expressions.ResolverException;
 import alvisnlp.module.Module;
 import alvisnlp.module.ModuleException;
@@ -49,13 +50,15 @@ public abstract class TEESClassify extends TEESMapper {
 	private String headRole = DefaultNames.getDependencyHeadRole();
 	private String dependentRole = DefaultNames.getDependencyDependentRole();
 	
-
-	private String setFeature = null;
+	// TODO: inutile car corpusSetFeature
+	//	private String setFeature = null;
+	
+	private InputDirectory model;
 
 	@Override
 	public void process(ProcessingContext<Corpus> ctx, Corpus corpus) throws ModuleException {
 		Logger logger = getLogger(ctx);
-		EvaluationContext evalCtx = new EvaluationContext(logger);
+//		EvaluationContext evalCtx = new EvaluationContext(logger);
 
 		try {		
 			logger.info("creating the External module object ");
@@ -75,7 +78,7 @@ public abstract class TEESClassify extends TEESMapper {
 			CorpusTEES corpusTEES = (CorpusTEES) jaxbu.unmarshal(teesClassifyExt.getPredictionFile());
 
 			logger.info("adding detected relations to Corpus ");
-			this.writeTEESResult(corpusTEES, corpus, ctx);
+			this.writeTEESResult(corpusTEES, ctx);
 
 			logger.info("number of documents : " + corpusTEES.getDocument().size());
 
@@ -95,13 +98,14 @@ public abstract class TEESClassify extends TEESMapper {
 	 * @return
 	 * @throws ProcessingException 
 	 */
-	public CorpusTEES prepareTEESCorpora(ProcessingContext<Corpus> ctx, Corpus corpusAlvis) throws ProcessingException{
-		if(this.getSetFeature()==null){
-			processingException("could not classify : corpus set doesn't exist");
-		} 
-		this.corpora.put(this.getSetFeature(), new CorpusTEES());
+	public CorpusTEES prepareTEESCorpora(ProcessingContext<Corpus> ctx, Corpus corpusAlvis) {
+		// TODO: inutile puisque fait dans createTheTeesCorpus()
+		//		if(this.getSetFeature()==null){
+		//			processingException("could not classify : corpus set doesn't exist");
+		//		} 
+		//		this.corpora.put(this.getSetFeature(), new CorpusTEES());
 		this.createTheTeesCorpus(ctx, corpusAlvis);	
-		return this.corpora.get(this.getSetFeature());
+		return this.corpora.get(this.getDefaultSetValue());
 	}
 	
 	/**
@@ -110,8 +114,8 @@ public abstract class TEESClassify extends TEESMapper {
 	 * @param corpusAlvis
 	 * @param ctx
 	 */
-	public void writeTEESResult( CorpusTEES corpusTEES, Corpus corpusAlvis, ProcessingContext<Corpus> ctx){
-		this.setRelations2CorpusAlvis(corpusTEES, corpusAlvis, ctx);
+	public void writeTEESResult(CorpusTEES corpusTEES, ProcessingContext<Corpus> ctx){
+		this.setRelations2CorpusAlvis(corpusTEES, ctx);
 	}
 	
 	
@@ -186,15 +190,14 @@ public abstract class TEESClassify extends TEESMapper {
 	}
 
 	@Param
-	public String getSetFeature() {
-		return setFeature;
+	public InputDirectory getModel() {
+		return model;
 	}
 
 
-	public void setSetFeature(String setFeature) {
-		this.setFeature = setFeature;
+	public void setModel(InputDirectory model) {
+		this.model = model;
 	}
-
 
 	/**
 	 * 
@@ -274,7 +277,7 @@ public abstract class TEESClassify extends TEESMapper {
 					"OUTSTREAM=" + this.outputStem, 
 					"OMITSTEPS=" + getOmitSteps().toString(),
 					"WORKDIR=" + this.baseDir.getAbsolutePath(),
-					"MODEL=" + getModel().getAbsolutePath()
+					"MODEL=" + model.getAbsolutePath()
 				};
 		}
 
@@ -299,7 +302,7 @@ public abstract class TEESClassify extends TEESMapper {
 
 
 
-		public File getPredictionFile() throws ModuleException, IOException {
+		public File getPredictionFile() throws IOException {
 			Logger logger = getLogger(ctx);
 			//
 			DirectoryScanner scanner = new DirectoryScanner();
@@ -313,32 +316,18 @@ public abstract class TEESClassify extends TEESMapper {
 			logger.info("localizing the prediction file : " + files[0]);
 			
 			File file = new File(this.baseDir.getAbsolutePath(), files[0]);
+			// open the gziped file to decompress.
 			FileInputStream stream = new FileInputStream(file);
-			String outname = null;
-			FileOutputStream output = null;
-			try {
-				// open the gziped file to decompress.
-				GZIPInputStream gzipstream = new GZIPInputStream(stream);
-				byte[] buffer = new byte[2048];
-
+			try (GZIPInputStream gzipstream = new GZIPInputStream(stream)) {
 				// create the output file without the .gz extension.
-				outname = file.getAbsolutePath().substring(0, file.getAbsolutePath().length() - 3);
-				output = new FileOutputStream(outname);
-
-				// and copy it to a new file
-				int len;
-				while ((len = gzipstream.read(buffer)) > 0) {
-					output.write(buffer, 0, len);
+				String outname = file.getAbsolutePath().substring(0, file.getAbsolutePath().length() - 3);
+				File outfile = new File(outname);
+				try (OutputStream output = new FileOutputStream(outname)) {
+					// and copy it to a new file
+					Files.copy(gzipstream, outfile, 2048, false);
 				}
-			} finally {
-				// both streams must always be closed.
-				if (output != null)
-					output.close();
-				stream.close();
+				return outfile;
 			}
-
-			return new File(outname);
-			
 		}
 
 		public OutputFile getInput() {

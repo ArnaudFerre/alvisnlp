@@ -52,12 +52,11 @@ public abstract class TEESMapper extends SectionModule<SectionResolvedObjects> i
 	// corpus params
 	private String documentSetFeature = "set";
 	protected Map<String,CorpusTEES> corpora = new HashMap<String,CorpusTEES>(); // TODO: stateful?
-	protected String defaultKey = "default"; // TODO: ?
+	protected String defaultSetValue = "default";
 
 	// execution params
 	private ExecutableFile executable;
 	private String omitSteps = "SPLIT-SENTENCES,NE";
-	private InputDirectory model; // TODO: input or output?
 	private InputDirectory workDir = null; // TODO: not used
 	private InputDirectory teesHome;
 
@@ -87,12 +86,9 @@ public abstract class TEESMapper extends SectionModule<SectionResolvedObjects> i
 		for (Document documentAlvis : Iterators.loop(documentIterator(evalCtx, corpusAlvis))) {
 	
 			// splitting the documents according to their corpus set
-			String set = documentAlvis.getLastFeature(getDocumentSetFeature());
-			if(set ==  null) {
-				set = this.defaultKey;
-				if(corpora.get(set) == null) {
-					this.corpora.put(set, new CorpusTEES());
-				}
+			String set = documentAlvis.hasFeature(documentSetFeature) ? documentAlvis.getLastFeature(documentSetFeature) : defaultSetValue;
+			if(!corpora.containsKey(set)) {
+				this.corpora.put(set, new CorpusTEES());
 			}
 			
 			// create a TEES document
@@ -268,7 +264,7 @@ public abstract class TEESMapper extends SectionModule<SectionResolvedObjects> i
 	
 	
 	
-	public void setRelations2CorpusAlvis(CorpusTEES corpusTEES, Corpus corpusAlvis, ProcessingContext<Corpus> ctx){
+	public void setRelations2CorpusAlvis(CorpusTEES corpusTEES, ProcessingContext<Corpus> ctx){
 		Logger logger = getLogger(ctx);
 //		EvaluationContext evalCtx = new EvaluationContext(logger);
 
@@ -403,15 +399,6 @@ public abstract class TEESMapper extends SectionModule<SectionResolvedObjects> i
 		this.executable = executable;
 	}
 	
-	@Param(mandatory = false)
-	public InputDirectory getModel() {
-		return model;
-	}
-
-	public void setModel(InputDirectory model) {
-		this.model = model;
-	}
-	
 	@Param(mandatory=false)
 	public InputDirectory getWorkDir() {
 		return workDir;
@@ -426,9 +413,17 @@ public abstract class TEESMapper extends SectionModule<SectionResolvedObjects> i
 		return teesHome;
 	}
 
-
 	public void setTeesHome(InputDirectory tEESHome) {
 		teesHome = tEESHome;
+	}
+
+	@Param
+	public String getDefaultSetValue() {
+		return defaultSetValue;
+	}
+
+	public void setDefaultSetValue(String defaultSetValue) {
+		this.defaultSetValue = defaultSetValue;
 	}
 
 	

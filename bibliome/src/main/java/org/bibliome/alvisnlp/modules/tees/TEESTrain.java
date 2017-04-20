@@ -14,6 +14,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.bibliome.util.Files;
+import org.bibliome.util.files.OutputDirectory;
 import org.bibliome.util.files.OutputFile;
 
 import alvisnlp.corpus.Corpus;
@@ -38,6 +39,7 @@ public abstract class TEESTrain extends TEESMapper {
 	private String trainSetValue = "train";
 	private String devSetValue = "dev";
 	private String testSetValue = "test";
+	private OutputDirectory model;
 
 	@Override
 	public void process(ProcessingContext<Corpus> ctx, Corpus corpus) throws ModuleException {
@@ -60,8 +62,6 @@ public abstract class TEESTrain extends TEESMapper {
 
 			logger.info("TEES training ");
 			callExternal(ctx, "run-tees-train", teesTrainExt, INTERNAL_ENCODING, "tees-train.sh");
-
-
 		}
 		catch (JAXBException|IOException e) {
 			rethrow(e);
@@ -86,8 +86,8 @@ public abstract class TEESTrain extends TEESMapper {
 		
 		logger.info("creating the train, dev, test corpus");
 		createTheTeesCorpus(ctx, corpusAlvis);
-		
-		if(this.corpora.get(this.getTrainSetValue()).getDocument().size()==0 || this.corpora.get(this.getTrainSetValue()).getDocument().size()==0 || this.corpora.get(this.getTrainSetValue()).getDocument().size()==0){
+
+		if(this.corpora.get(this.getTrainSetValue()).getDocument().size()==0 || this.corpora.get(this.getDevSetValue()).getDocument().size()==0 || this.corpora.get(this.getTestSetValue()).getDocument().size()==0){
 			processingException("could not do training : train, dev or test is empty");
 		}
 	}
@@ -140,6 +140,15 @@ public abstract class TEESTrain extends TEESMapper {
 
 	public void setTestSetValue(String test) {
 		this.testSetValue = test;
+	}
+
+	@Param
+	public OutputDirectory getModel() {
+		return model;
+	}
+
+	public void setModel(OutputDirectory model) {
+		this.model = model;
 	}
 
 	/**
@@ -199,7 +208,7 @@ public abstract class TEESTrain extends TEESMapper {
 					"TEES_TEST_IN="  + this.testInput.getAbsolutePath(),
 					"TEES_TEST_OUT=" + this.baseDir.getAbsolutePath() + "/test_pre.xml",
 					"WORKDIR=" + this.baseDir.getAbsolutePath(),
-					"MODEL=" + getModel().getAbsolutePath()
+					"MODEL=" + model.getAbsolutePath()
 				};
 		}
 
