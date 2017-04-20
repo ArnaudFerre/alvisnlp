@@ -41,10 +41,7 @@ import alvisnlp.module.lib.Param;
  */
 
 @AlvisNLPModule
-public class TEESClassify extends TEESMapper {	
-
-	private String internalEncoding = "UTF-8";
-
+public abstract class TEESClassify extends TEESMapper {
 	private String dependencyRelationName = DefaultNames.getDependencyRelationName();
 	private String dependencyLabelFeatureName = DefaultNames.getDependencyLabelFeatureName();
 	private String sentenceRole = DefaultNames.getDependencySentenceRole();
@@ -71,7 +68,7 @@ public class TEESClassify extends TEESMapper {
 			jaxbm.marshal(this.prepareTEESCorpora(ctx, corpus), teesClassifyExt.getInput());
 
 			logger.info("calling tees-predict ");
-			callExternal(ctx, "run-tees-predict", teesClassifyExt, internalEncoding, "tees-classify.py");
+			callExternal(ctx, "run-tees-predict", teesClassifyExt, INTERNAL_ENCODING, "tees-classify.py");
 
 			logger.info("Accessing the test prediction file");
 			Unmarshaller jaxbu = jaxbContext.createUnmarshaller();

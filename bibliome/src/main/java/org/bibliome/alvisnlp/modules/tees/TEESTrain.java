@@ -17,7 +17,6 @@ import org.bibliome.util.Files;
 import org.bibliome.util.files.OutputFile;
 
 import alvisnlp.corpus.Corpus;
-import alvisnlp.corpus.expressions.EvaluationContext;
 import alvisnlp.corpus.expressions.ResolverException;
 import alvisnlp.module.Module;
 import alvisnlp.module.ModuleException;
@@ -35,21 +34,16 @@ import alvisnlp.module.lib.Param;
  */
 
 @AlvisNLPModule
-public class TEESTrain extends TEESMapper {
-	
-	
-	private String trainSetFeature = null;
-	private String devSetFeature = null;
-	private String testSetFeature = null;
-	
-
-	private String internalEncoding = "UTF-8";
+public abstract class TEESTrain extends TEESMapper {
+	private String trainSetValue = "train";
+	private String devSetValue = "dev";
+	private String testSetValue = "test";
 
 	@Override
 	public void process(ProcessingContext<Corpus> ctx, Corpus corpus) throws ModuleException {
 	
 		Logger logger = getLogger(ctx);
-		EvaluationContext evalCtx = new EvaluationContext(logger);
+//		EvaluationContext evalCtx = new EvaluationContext(logger);
 
 		try {
 
@@ -58,23 +52,20 @@ public class TEESTrain extends TEESMapper {
 			Marshaller jaxbm = jaxbContext.createMarshaller();
 			jaxbm.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			// marshaling
-			this.prepareTEESCorpora(ctx, corpus);
+			prepareTEESCorpora(ctx, corpus);
 			TEESTrainExternal teesTrainExt = new TEESTrainExternal(ctx);
-			jaxbm.marshal(this.corpora.get(this.getTrainSetFeature()), teesTrainExt.getTrainInput());
-			jaxbm.marshal(this.corpora.get(this.getDevSetFeature()), teesTrainExt.getDevInput());
-			jaxbm.marshal(this.corpora.get(this.getTestSetFeature()), teesTrainExt.getTestInput());
+			jaxbm.marshal(this.corpora.get(this.getTrainSetValue()), teesTrainExt.getTrainInput());
+			jaxbm.marshal(this.corpora.get(this.getDevSetValue()), teesTrainExt.getDevInput());
+			jaxbm.marshal(this.corpora.get(this.getTestSetValue()), teesTrainExt.getTestInput());
 
 			logger.info("TEES training ");
-			callExternal(ctx, "run-tees-train", teesTrainExt, internalEncoding, "tees-train.sh");
+			callExternal(ctx, "run-tees-train", teesTrainExt, INTERNAL_ENCODING, "tees-train.sh");
 
 
-		} catch (JAXBException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-
+		catch (JAXBException|IOException e) {
+			rethrow(e);
+		}
 	}
 	
 	
@@ -86,17 +77,17 @@ public class TEESTrain extends TEESMapper {
 	 */
 	public void prepareTEESCorpora(ProcessingContext<Corpus> ctx, Corpus corpusAlvis) throws ProcessingException{
 		Logger logger = getLogger(ctx);
-		EvaluationContext evalCtx = new EvaluationContext(logger);
+//		EvaluationContext evalCtx = new EvaluationContext(logger);
 		
-		logger.info("preparing the train, dev, test corpus");
-		this.corpora.put(this.getTrainSetFeature(), new CorpusTEES());
-		this.corpora.put(this.getDevSetFeature(), new CorpusTEES());
-		this.corpora.put(this.getTestSetFeature(), new CorpusTEES());
+//		logger.info("preparing the train, dev, test corpus");
+		this.corpora.put(this.getTrainSetValue(), new CorpusTEES());
+		this.corpora.put(this.getDevSetValue(), new CorpusTEES());
+		this.corpora.put(this.getTestSetValue(), new CorpusTEES());
 		
 		logger.info("creating the train, dev, test corpus");
 		createTheTeesCorpus(ctx, corpusAlvis);
 		
-		if(this.corpora.get(this.getTrainSetFeature()).getDocument().size()==0 || this.corpora.get(this.getTrainSetFeature()).getDocument().size()==0 || this.corpora.get(this.getTrainSetFeature()).getDocument().size()==0){
+		if(this.corpora.get(this.getTrainSetValue()).getDocument().size()==0 || this.corpora.get(this.getTrainSetValue()).getDocument().size()==0 || this.corpora.get(this.getTrainSetValue()).getDocument().size()==0){
 			processingException("could not do training : train, dev or test is empty");
 		}
 	}
@@ -105,7 +96,6 @@ public class TEESTrain extends TEESMapper {
 	/**
 	 * object resolver and feature handler
 	 */
-	
 	@Override
 	protected SectionResolvedObjects createResolvedObjects(ProcessingContext<Corpus> ctx) throws ResolverException {
 		return new SectionResolvedObjects(ctx, this);
@@ -113,57 +103,51 @@ public class TEESTrain extends TEESMapper {
 
 	@Override
 	protected String[] addLayersToSectionFilter() {
-		// TODO Auto-generated method stub
-		return null;
+		return new String[] {
+				getTokenLayerName(),
+				getSentenceLayerName(),
+				getNamedEntityLayerName()
+		};
 	}
 
 	@Override
 	protected String[] addFeaturesToSectionFilter() {
-		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	
-	
-	/**
-	 * getters and setters
-	 * 
-	 */
-	@Param(mandatory=true)
-	public String getTrainSetFeature() {
-		return trainSetFeature;
+
+	@Param
+	public String getTrainSetValue() {
+		return trainSetValue;
 	}
 
-
-	public void setTrainSetFeature(String train) {
-		this.trainSetFeature = train;
+	public void setTrainSetValue(String train) {
+		this.trainSetValue = train;
 	}
 
-	@Param(mandatory=true)
-	public String getDevSetFeature() {
-		return devSetFeature;
+	@Param
+	public String getDevSetValue() {
+		return devSetValue;
 	}
 
-	public void setDevSetFeature(String dev) {
-		this.devSetFeature = dev;
+	public void setDevSetValue(String dev) {
+		this.devSetValue = dev;
 	}
 
-	@Param(mandatory=true)
-	public String getTestSetFeature() {
-		return testSetFeature;
+	@Param
+	public String getTestSetValue() {
+		return testSetValue;
 	}
 
-	public void setTestSetFeature(String test) {
-		this.testSetFeature = test;
+	public void setTestSetValue(String test) {
+		this.testSetValue = test;
 	}
-
 
 	/**
 	 * 
 	 * @author mba
 	 *
 	 */
-	private final class TEESTrainExternal implements External<Corpus> {
+	private class TEESTrainExternal implements External<Corpus> {
 		private final OutputFile trainInput;
 		private final OutputFile devInput;
 		private final OutputFile testInput;
@@ -233,8 +217,9 @@ public class TEESTrain extends TEESMapper {
 					logger.fine("    " + line);
 				}
 				logger.fine("end of TEES classifier error");
-			} catch (IOException ioe) {
-				logger.warning("could not read TEES standard error: " + ioe.getMessage());
+			}
+			catch (IOException ioe) {
+				rethrow(ioe);
 			}
 		}
 
@@ -252,5 +237,4 @@ public class TEESTrain extends TEESMapper {
 		}
 
 	}
-	
 }
