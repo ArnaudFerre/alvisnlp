@@ -56,20 +56,20 @@ class TimedMethodModel {
 				first = false;
 				continue;
 			}
-			checkPublicType(ctx, paramType, method, false, msg);
+			checkPublicType(ctx, paramType, false, msg);
 		}
 		TypeMirror returnType = method.getReturnType();
-		checkPublicType(ctx, returnType, method, true, msg);
+		checkPublicType(ctx, returnType, true, msg);
 	}
 	
-	private void checkPublicType(ModelContext ctx, TypeMirror type, ExecutableElement method, boolean acceptVoid, String msg) throws ModelException {
+	private void checkPublicType(ModelContext ctx, TypeMirror type, boolean acceptVoid, String msg) throws ModelException {
 		TypeKind kind = type.getKind();
 		if (kind.isPrimitive()) {
 			return;
 		}
 		switch (kind) {
 			case ARRAY:
-				checkPublicType(ctx, ((ArrayType) type).getComponentType(), method, false, msg);
+				checkPublicType(ctx, ((ArrayType) type).getComponentType(), false, msg);
 				return;
 			case DECLARED:
 				if (ctx.isPublic(type) || ctx.isProtected(type)) {

@@ -50,7 +50,7 @@ public class FeatureElement implements Element {
 	}
 
 	@Override
-	public boolean hasFeature(String key) {
+	public boolean hasFeature(@SuppressWarnings("hiding") String key) {
 		return element.hasFeature(key) || KEY_FEATURE_KEY.equals(key) || VALUE_FEATURE_KEY.equals(key);
 	}
 
@@ -63,7 +63,7 @@ public class FeatureElement implements Element {
 	}
 
 	@Override
-	public List<String> getFeature(String key) {
+	public List<String> getFeature(@SuppressWarnings("hiding") String key) {
 		if (KEY_FEATURE_KEY.equals(key)) {
 			return Collections.singletonList(this.key);
 		}
@@ -74,21 +74,21 @@ public class FeatureElement implements Element {
 	}
 
 	@Override
-	public boolean removeFeature(String key, String value) {
+	public boolean removeFeature(@SuppressWarnings("hiding") String key, @SuppressWarnings("hiding") String value) {
 		if (KEY_FEATURE_KEY.equals(key) || VALUE_FEATURE_KEY.equals(key))
 			return false;
 		return element.removeFeature(key, value);
 	}
 
 	@Override
-	public List<String> removeFeatures(String key) {
+	public List<String> removeFeatures(@SuppressWarnings("hiding") String key) {
 		if (KEY_FEATURE_KEY.equals(key) || VALUE_FEATURE_KEY.equals(key))
 			return Collections.emptyList();
 		return element.removeFeatures(key);
 	}
 
 	@Override
-	public String getFirstFeature(String key) {
+	public String getFirstFeature(@SuppressWarnings("hiding") String key) {
 		if (KEY_FEATURE_KEY.equals(key)) {
 			return this.key;
 		}
@@ -99,7 +99,7 @@ public class FeatureElement implements Element {
 	}
 
 	@Override
-	public String getLastFeature(String key) {
+	public String getLastFeature(@SuppressWarnings("hiding") String key) {
 		if (KEY_FEATURE_KEY.equals(key)) {
 			return this.key;
 		}
@@ -110,7 +110,7 @@ public class FeatureElement implements Element {
 	}
 
 	@Override
-	public void addFeature(String key, String value) {
+	public void addFeature(@SuppressWarnings("hiding") String key, @SuppressWarnings("hiding") String value) {
 		element.addFeature(key, value);
 	}
 
@@ -125,7 +125,7 @@ public class FeatureElement implements Element {
 	}
 
 	@Override
-	public void featuresToXML(PrintStream out, String tag, String name, String value) throws IOException {
+	public void featuresToXML(PrintStream out, String tag, String name, @SuppressWarnings("hiding") String value) throws IOException {
 		element.featuresToXML(out, tag, name, value);
 	}
 
@@ -173,7 +173,7 @@ public class FeatureElement implements Element {
 	}
 
 	@Override
-	public boolean isStaticFeatureKey(String key) {
+	public boolean isStaticFeatureKey(@SuppressWarnings("hiding") String key) {
 		return element.isStaticFeatureKey(key);
 	}
 	

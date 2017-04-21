@@ -81,6 +81,7 @@ public abstract class AlvisAEReader extends CorpusModule<ResolvedObjects> implem
 		return new ResolvedObjects(ctx, this);
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public void process(ProcessingContext<Corpus> ctx, Corpus corpus) throws ModuleException {
 		loadPGSQLDriver();
@@ -121,17 +122,18 @@ public abstract class AlvisAEReader extends CorpusModule<ResolvedObjects> implem
 		protected Section defaultValue(Integer key) {
 			try {
 				docStatement.setInt(1, key);
-				ResultSet docs = docStatement.executeQuery();
-				if (!docs.next())
-					throw new RuntimeException("no document with id: " + key);
-				String description = docs.getString("description");
-				String contents = docs.getString("contents");
-				String properties = docs.getString("props");
-				if (docs.next())
-					throw new RuntimeException("more than one document with id: " + key);
-				Document doc = Document.getDocument(AlvisAEReader.this, corpus, description);
-				setFeatures(doc, properties);
-				return new Section(AlvisAEReader.this, doc, sectionName, contents);
+				try (ResultSet docs = docStatement.executeQuery()) {
+					if (!docs.next())
+						throw new RuntimeException("no document with id: " + key);
+					String description = docs.getString("description");
+					String contents = docs.getString("contents");
+					String properties = docs.getString("props");
+					if (docs.next())
+						throw new RuntimeException("more than one document with id: " + key);
+					Document doc = Document.getDocument(AlvisAEReader.this, corpus, description);
+					setFeatures(doc, properties);
+					return new Section(AlvisAEReader.this, doc, sectionName, contents);
+				}
 			} 
 			catch (SQLException e) {
 				throw new RuntimeException(e);

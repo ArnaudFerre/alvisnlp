@@ -177,7 +177,7 @@ public class GeniaWriter extends SectionModule<GeniaWriterResolvedObjects> {
 		}
 	}
 	
-	private boolean printEvent(ProcessingContext<Corpus> ctx, PrintStream out, Element elt, Map<Annotation,String> entities, Map<Tuple,String> events, String type, String id, String... more) {
+	private boolean printEvent(ProcessingContext<Corpus> ctx, PrintStream out, Element elt, Map<Annotation,String> entityIds, Map<Tuple,String> eventIds, String type, String id, String... more) {
 		Tuple t = DownCastElement.toTuple(elt);
 		if (t == null) {
 			getLogger(ctx).warning("event of type " + type + " is not a tuple: " + t);
@@ -186,7 +186,7 @@ public class GeniaWriter extends SectionModule<GeniaWriterResolvedObjects> {
 		out.print(id + '\t' + type);
 		for (String role : t.getRoles()) {
 			Element arg = t.getArgument(role);
-			String ref = entities.containsKey(arg) ? entities.get(arg) : events.get(arg);
+			String ref = entityIds.containsKey(arg) ? entityIds.get(arg) : eventIds.get(arg);
 			out.print(" " + role + ':' + ref);
 		}
 		for (String s : more) {
@@ -197,19 +197,19 @@ public class GeniaWriter extends SectionModule<GeniaWriterResolvedObjects> {
 		return true;
 	}
 
-	private void printEntities(ProcessingContext<Corpus> ctx, EvaluationContext evalCtx, PrintStream out, Section sec, String idPrefix, Map<Annotation,String> entities, String type, Evaluator expr, Evaluator form) {
+	private void printEntities(ProcessingContext<Corpus> ctx, EvaluationContext evalCtx, PrintStream out, Section sec, String idPrefix, Map<Annotation,String> entityIds, String type, Evaluator expr, Evaluator form) {
 		for (Element elt : Iterators.loop(expr.evaluateElements(evalCtx, sec))) {
 			Annotation a = DownCastElement.toAnnotation(elt);
 			if (a == null) {
 				getLogger(ctx).warning("entity of type " + type + " is not an annotation: " + a);
 				continue;
 			}
-			if (entities.containsKey(a)) {
+			if (entityIds.containsKey(a)) {
 				getLogger(ctx).warning("duplicate entity: " + a);
 				continue;
 			}
-			String id = idPrefix + (entities.size() + 1);
-			entities.put(a, id);
+			String id = idPrefix + (entityIds.size() + 1);
+			entityIds.put(a, id);
 			out.println(id + '\t' + type + ' ' + a.getStart() + ' ' + a.getEnd() + '\t' + form.evaluateString(evalCtx, a).replace('\n', ' '));
 		}
 	}

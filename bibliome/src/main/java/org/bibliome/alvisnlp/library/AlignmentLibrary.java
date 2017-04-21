@@ -70,10 +70,10 @@ public abstract class AlignmentLibrary extends FunctionLibrary {
 
 		@Override
 		public double evaluateDouble(EvaluationContext ctx, Element elt) {
-			List<Element> a = this.a.evaluateList(ctx, elt);
-			List<Element> b = this.b.evaluateList(ctx, elt);
+			List<Element> aValue = this.a.evaluateList(ctx, elt);
+			List<Element> bValue = this.b.evaluateList(ctx, elt);
 			AlignmentScore<Element,Element> alignmentScore = getScore(ctx, elt);
-			NeedlemanWunsch<Element,Element> matrix = new NeedlemanWunsch<Element,Element>(a, b, alignmentScore);
+			NeedlemanWunsch<Element,Element> matrix = new NeedlemanWunsch<Element,Element>(aValue, bValue, alignmentScore);
 			matrix.solve();
 			return matrix.getScore();
 		}
@@ -87,10 +87,10 @@ public abstract class AlignmentLibrary extends FunctionLibrary {
 		}
 
 		private AlignmentScore<Element,Element> getScore(EvaluationContext ctx, Element elt) {
-			double gap = this.gap.evaluateDouble(ctx, elt);
+			double gapValue = this.gap.evaluateDouble(ctx, elt);
 			if (probability)
-				return new ProbabilityScore(ctx, gap);
-			return new AdditiveScore(ctx, gap);
+				return new ProbabilityScore(ctx, gapValue);
+			return new AdditiveScore(ctx, gapValue);
 		}
 		
 		private final class ProbabilityScore extends AlignmentProbability<Element,Element> {
@@ -104,8 +104,8 @@ public abstract class AlignmentLibrary extends FunctionLibrary {
 			}
 
 			@Override
-			public double getScore(Element a, Element b) {
-				return comparatorContext.evaluateDouble(match, ctx, a, b);
+			public double getScore(Element aElt, Element bElt) {
+				return comparatorContext.evaluateDouble(match, ctx, aElt, bElt);
 			}
 
 			@Override
@@ -125,8 +125,8 @@ public abstract class AlignmentLibrary extends FunctionLibrary {
 			}
 
 			@Override
-			public double getScore(Element a, Element b) {
-				return comparatorContext.evaluateDouble(match, ctx, a, b);
+			public double getScore(Element aElt, Element bElt) {
+				return comparatorContext.evaluateDouble(match, ctx, aElt, bElt);
 			}
 
 			@Override

@@ -83,6 +83,7 @@ public abstract class EnjuParser extends SectionModule<SectionResolvedObjects> i
 	public void process(ProcessingContext<Corpus> ctx, Corpus corpus) throws ModuleException {
 		Logger logger = getLogger(ctx);
 		LibraryResolver resolver = getLibraryResolver(ctx);
+		@SuppressWarnings("hiding")
 		Evaluator sentenceFilter = resolver.resolveNullable(this.sentenceFilter);
 		EvaluationContext evalCtx = new EvaluationContext(logger);
 		File tempDir = getTempDir(ctx);
@@ -99,7 +100,7 @@ public abstract class EnjuParser extends SectionModule<SectionResolvedObjects> i
 		}
 	}
 
-	private Collection<Layer> getSentences(Corpus corpus, EvaluationContext ctx, Evaluator sentenceFilter) {
+	private Collection<Layer> getSentences(Corpus corpus, EvaluationContext ctx, @SuppressWarnings("hiding") Evaluator sentenceFilter) {
 		Collection<Layer> result = new ArrayList<Layer>();
 		for (Section sec : Iterators.loop(sectionIterator(ctx, corpus)))
 			for (Layer sent : sec.getSentences(wordLayerName, sentenceLayerName))

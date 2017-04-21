@@ -140,7 +140,7 @@ public class TreeTaggerExternal<T extends Annotable> implements External<T> {
      *            the lemma
      * @throws IOException 
      */
-    public void addInputToken(String token, String posTag, String lemma) {
+    public void addInputToken(String token, @SuppressWarnings("hiding") String posTag, @SuppressWarnings("hiding") String lemma) {
         if (printStream == null) {
 			throw new IllegalStateException();
 		}

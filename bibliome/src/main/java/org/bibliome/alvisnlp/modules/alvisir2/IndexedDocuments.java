@@ -37,8 +37,8 @@ public class IndexedDocuments implements Resolvable<IndexedDocumentsEvaluator> {
 
 	@Override
 	public IndexedDocumentsEvaluator resolveExpressions(LibraryResolver resolver) throws ResolverException {
-		Evaluator instances = this.instances.resolveExpressions(resolver);
-		List<IndexedFieldsEvaluator> indexedFields = resolver.resolveList(this.indexedFields);
-		return new IndexedDocumentsEvaluator(instances, indexedFields);
+		Evaluator resolvedInstances = this.instances.resolveExpressions(resolver);
+		List<IndexedFieldsEvaluator> resolvedIndexedFields = resolver.resolveList(this.indexedFields);
+		return new IndexedDocumentsEvaluator(resolvedInstances, resolvedIndexedFields);
 	}
 }

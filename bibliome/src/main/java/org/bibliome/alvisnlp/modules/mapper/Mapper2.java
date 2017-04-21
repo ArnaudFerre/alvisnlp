@@ -110,7 +110,7 @@ public abstract class Mapper2<S extends MapperResolvedObjects,T> extends CorpusM
 
     public abstract void fillMapping(DefaultMap<String,List<T>> mapping, ProcessingContext<Corpus> ctx, Corpus corpus) throws ProcessingException;
     
-    protected abstract void handleMatch(Element target, T value);
+    protected abstract void handleMatch(Element targetElt, T value);
 
     @Param
 	public Expression getTarget() {

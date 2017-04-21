@@ -129,33 +129,33 @@ public final class Section extends AbstractElement {
 
     /**
      * Returns true if this section has a layer with the specified name.
-     * @param name
+     * @param layerName
      * @return true if this section has a layer with the specified name
      */
-    public boolean hasLayer(String name) {
+    public boolean hasLayer(String layerName) {
         if (layers == null)
             return false;
-        return layers.containsKey(name);
+        return layers.containsKey(layerName);
     }
 
     /**
      * Returns this section layer with the specified name.
-     * @param name name of the layer to get
+     * @param layerName name of the layer to get
      * @return this section layer with the specified name, or null there is no layer named <code>name</code>
      */
-    public Layer getLayer(String name) {
+    public Layer getLayer(String layerName) {
         if (layers == null)
             return null;
-        return layers.get(name);
+        return layers.get(layerName);
     }
     
     /**
      * Returns a layer containing all annotations in the layer with the specified name but only annotations that satisfy the specified filter.
-     * @param name
+     * @param layerName
      * @param filter
      */
-    public Layer getLayer(EvaluationContext ctx, String name, Evaluator filter) {
-        Layer layer = getLayer(name);
+    public Layer getLayer(EvaluationContext ctx, String layerName, Evaluator filter) {
+        Layer layer = getLayer(layerName);
         if (filter == null)
             return layer;
         Layer result = new Layer(this);
@@ -164,21 +164,21 @@ public final class Section extends AbstractElement {
     }
 
     void addLayer(Layer layer) {
-    	String name = layer.getName();
-        if (layers.containsKey(name))
-            throw new IllegalArgumentException(name.toString());
-        layers.put(name, layer);
+    	String layerName = layer.getName();
+        if (layers.containsKey(layerName))
+            throw new IllegalArgumentException(layerName.toString());
+        layers.put(layerName, layer);
     }
 
     /**
      * Returns this section layer with the specified name, create an empty layer if it does not exist.
-     * @param name name of the layer to get
+     * @param layerName name of the layer to get
      * @return this section layer with the specified name, create an empty layer if it does not exist
      */
-    public Layer ensureLayer(String name) {
-        if (hasLayer(name))
-            return getLayer(name);
-        return new Layer(this, name);
+    public Layer ensureLayer(String layerName) {
+        if (hasLayer(layerName))
+            return getLayer(layerName);
+        return new Layer(this, layerName);
     }
 
     /**
@@ -214,10 +214,10 @@ public final class Section extends AbstractElement {
     }
 
     public void addRelation(Relation rel) {
-        String name = rel.getName();
-        if (relations.containsKey(name))
-            throw new IllegalArgumentException("duplicate relation " + name);
-        relations.put(name, rel);
+        String relName = rel.getName();
+        if (relations.containsKey(relName))
+            throw new IllegalArgumentException("duplicate relation " + relName);
+        relations.put(relName, rel);
     }
 
     /**
@@ -229,18 +229,18 @@ public final class Section extends AbstractElement {
 
     /**
      * Returns the relation with the specified name.
-     * @param name
+     * @param relName
      */
-    public Relation getRelation(String name) {
-        return relations.get(name);
+    public Relation getRelation(String relName) {
+        return relations.get(relName);
     }
     
     /**
      * Returns either this section has a relation with the specified name.
-     * @param name
+     * @param relName
      */
-    public boolean hasRelation(String name) {
-    	return relations.containsKey(name);
+    public boolean hasRelation(String relName) {
+    	return relations.containsKey(relName);
     }
     
     /**
@@ -257,16 +257,16 @@ public final class Section extends AbstractElement {
      * Returns the relation of this section with the specified name.
      * If this section has no relation with the specified name then an empty one is created.
      * @param rc
-     * @param name
+     * @param relName
      */
-    public Relation ensureRelation(RelationCreator rc, String name, boolean autoLink) {
-    	if (relations.containsKey(name))
-    		return relations.get(name);
-    	return new Relation(rc, this, name, autoLink);
+    public Relation ensureRelation(RelationCreator rc, String relName, boolean autoLink) {
+    	if (relations.containsKey(relName))
+    		return relations.get(relName);
+    	return new Relation(rc, this, relName, autoLink);
     }
     
-    public Relation ensureRelation(RelationCreator rc, String name) {
-    	return ensureRelation(rc, name, true);
+    public Relation ensureRelation(RelationCreator rc, String relName) {
+    	return ensureRelation(rc, relName, true);
     }
     
     void toXML(PrintStream out) throws IOException {

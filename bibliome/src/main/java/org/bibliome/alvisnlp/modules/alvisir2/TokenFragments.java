@@ -37,9 +37,9 @@ public class TokenFragments implements Resolvable<TokenFragmentsEvaluator> {
 
 	@Override
 	public TokenFragmentsEvaluator resolveExpressions(LibraryResolver resolver) throws ResolverException {
-		Evaluator instances = this.instances.resolveExpressions(resolver);
-		Evaluator start = this.start.resolveExpressions(resolver);
-		Evaluator end = this.end.resolveExpressions(resolver);
-		return new TokenFragmentsEvaluator(instances, start, end);
+		Evaluator resolvedInstances = this.instances.resolveExpressions(resolver);
+		Evaluator resolvedStart = this.start.resolveExpressions(resolver);
+		Evaluator resolvedEnd = this.end.resolveExpressions(resolver);
+		return new TokenFragmentsEvaluator(resolvedInstances, resolvedStart, resolvedEnd);
 	}
 }

@@ -139,8 +139,8 @@ public class KeywordsSelector extends CorpusModule<KeywordSelectorResolvedObject
 	@TimeThis(category=TimerCategory.EXPORT, task="write-keywords")
 	protected void writeKeywords(@SuppressWarnings("unused") ProcessingContext<Corpus> ctx, EvaluationContext evalCtx, PrintStream out, Element doc, List<KeywordScore> keywordRank) {
 		KeywordSelectorResolvedObjects resObj = getResolvedObjects();
-		String documentId = resObj.documentId.evaluateString(evalCtx, doc);
-		String prefix = documentId + separator;
+		String documentIdValue = resObj.documentId.evaluateString(evalCtx, doc);
+		String prefix = documentIdValue + separator;
 		for (KeywordScore score : keywordRank) {
 			String kw = score.getKeyword();
 			double d = score.getScore();

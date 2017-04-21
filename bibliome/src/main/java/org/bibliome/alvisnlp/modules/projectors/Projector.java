@@ -213,12 +213,12 @@ public abstract class Projector<S extends SectionResolvedObjects,T,D extends Dic
 		}
 
 		@Override
-		protected void addValue(T value, CharSequence key) {
+		protected void addValue(T theValue, CharSequence key) {
 			if (this.value == null) {
-				this.value = value;
+				this.value = theValue;
 				return;
 			}
-			if (this.value.equals(value)) {
+			if (this.value.equals(theValue)) {
 				if (errorDuplicateValues)
 					throw new ProjectorException("duplicate entry for: " + key);
 				return;
@@ -229,7 +229,7 @@ public abstract class Projector<S extends SectionResolvedObjects,T,D extends Dic
 			case NOP:
 				break;
 			case REPLACE:
-				this.value = value;
+				this.value = theValue;
 				break;
 			case ADD:
 				throw new RuntimeException();

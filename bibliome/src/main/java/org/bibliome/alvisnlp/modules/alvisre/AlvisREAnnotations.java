@@ -74,8 +74,8 @@ abstract class AlvisREAnnotations<T extends ResolvedAlvisREAnnotation> implement
 
 		private void printLine(PrintStream out, SectionsMerger merger, EvaluationContext ctx, Element elt, String forceType) {
 			String id = merger.getId(elt);
-			String type = forceType == null ? this.type.evaluateString(ctx, elt) : forceType;
-			out.format("%s\t%s", id, type);
+			String typeValue = forceType == null ? this.type.evaluateString(ctx, elt) : forceType;
+			out.format("%s\t%s", id, typeValue);
 			printInfo(out, merger, ctx, elt);
 			out.println();
 		}

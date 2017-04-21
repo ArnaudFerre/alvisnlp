@@ -82,8 +82,8 @@ public abstract class CorpusModule<T extends ResolvedObjects> extends ModuleBase
 		if (super.testProcess(ctx, corpus)) {
 //			System.err.println("[testProcess] getClass() = " + getClass()); 
 //			System.err.println("[testProcess] resolvedObjects = " + resolvedObjects);
-			Evaluator active = resolvedObjects.getActive();
-			if (active.evaluateBoolean(new EvaluationContext(logger), corpus))
+			Evaluator resolvedActive = resolvedObjects.getActive();
+			if (resolvedActive.evaluateBoolean(new EvaluationContext(logger), corpus))
 				return true;
 			getLogger(ctx).info("skipping (inactive)");
 		}

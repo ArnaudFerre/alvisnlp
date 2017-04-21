@@ -56,8 +56,8 @@ public abstract class RegExpLibrary extends FunctionLibrary {
 		@Override
 		public List<Element> evaluateList(EvaluationContext ctx, Element elt) {
 			List<Element> result = new ArrayList<Element>();
-			String target = this.target.evaluateString(ctx, elt);
-			lib.init(target);
+			String targetValue = this.target.evaluateString(ctx, elt);
+			lib.init(targetValue);
 			while (lib.findNext()) {
 				Iterators.fill(fun.evaluateElements(ctx, elt), result);
 				if (justOne)

@@ -94,8 +94,8 @@ public class AlvisIRIndexer extends CorpusModule<AlvisIRIndexerResolvedObjects> 
 		resObj.documents.setRoleNames(getNamesIndex(globalAttributes.getAllRoleNames()));
 		resObj.documents.setPropertyKeys(getNamesIndex(globalAttributes.getPropertyKeys()));
 		IndexWriterConfig conf = new IndexWriterConfig(Version.LUCENE_36, null);
-		try (Directory indexDir = FSDirectory.open(this.indexDir)) {
-			if (IndexReader.indexExists(indexDir)) {
+		try (Directory luceneDir = FSDirectory.open(this.indexDir)) {
+			if (IndexReader.indexExists(luceneDir)) {
 				if (clearIndex) {
 					logger.info("clearing index directory: " + this.indexDir.getAbsolutePath());
 					if (!Files.deleteDir(this.indexDir)) {
@@ -106,7 +106,7 @@ public class AlvisIRIndexer extends CorpusModule<AlvisIRIndexerResolvedObjects> 
 					logger.warning("index directory exists: " + this.indexDir.getAbsolutePath());
 				}
 			}
-			try (IndexWriter indexWriter = new IndexWriter(indexDir, conf)) {
+			try (IndexWriter indexWriter = new IndexWriter(luceneDir, conf)) {
 				if (recordGlobalIndexAttributes) {
 					logger.info("recording global attributes");
 					DocumentsIndexer.recordGlobalIndexAttributes(indexWriter, globalAttributes);

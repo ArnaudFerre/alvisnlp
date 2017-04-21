@@ -142,10 +142,10 @@ public class AnnotationSet implements Resolvable<Resolved> {
 
 	@Override
 	public Resolved resolveExpressions(LibraryResolver resolver) throws ResolverException {
-		Evaluator unmatched = this.unmatched.resolveExpressions(resolver);
-		Evaluator unmatchedId = this.unmatchedId.resolveExpressions(resolver);
-		Evaluator unmatchedAnnotationSet = this.unmatchedAnnotationSet.resolveExpressions(resolver);
-		Resolved result = new Resolved(unmatched, unmatchedId, unmatchedAnnotationSet);
+		Evaluator resolvedUnmatched = this.unmatched.resolveExpressions(resolver);
+		Evaluator resolvedUnmatchedId = this.unmatchedId.resolveExpressions(resolver);
+		Evaluator resolvedUnmatchedAnnotationSet = this.unmatchedAnnotationSet.resolveExpressions(resolver);
+		Resolved result = new Resolved(resolvedUnmatched, resolvedUnmatchedId, resolvedUnmatchedAnnotationSet);
 		for (TextAnnotationDefinition t : textAnnotationDefinitions)
 			result.textAnnotationDefinitions.add(t.resolveExpressions(resolver));
 		for (GroupDefinition g : groupDefinitions)

@@ -118,10 +118,10 @@ public interface Sequence<T extends Annotable> extends Module<T> {
 		}
 		
 		public void addParamHandler(String modulePath, String parameterName) throws ParameterException {
-			Module<T> module = getModule().getModuleByPath(modulePath);
-			if (module == null)
+			Module<T> subModule = module.getModuleByPath(modulePath);
+			if (subModule == null)
 				throw new RuntimeException("no such module: " + modulePath);
-			ParamHandler<T> ph = module.getParamHandler(parameterName);
+			ParamHandler<T> ph = subModule.getParamHandler(parameterName);
 			addParamHandler(ph);
 		}
 

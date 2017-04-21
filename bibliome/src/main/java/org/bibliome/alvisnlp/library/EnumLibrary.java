@@ -228,8 +228,8 @@ public abstract class EnumLibrary extends FunctionLibrary {
 		@Override
 		public Iterator<Element> evaluateElements(EvaluationContext ctx, Element elt) {
 			Iterator<Element> matrix = this.elements.evaluateElements(ctx, elt);
-			int start = this.start.evaluateInt(ctx, elt);
-			return new EnumIterator(matrix, start);
+			int startValue = this.start.evaluateInt(ctx, elt);
+			return new EnumIterator(matrix, startValue);
 		}
 
 		@Override

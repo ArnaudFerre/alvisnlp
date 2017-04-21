@@ -205,16 +205,16 @@ public class StatementLibrary extends FunctionLibrary {
 		
 		private void addStatement(EvaluationContext ctx, Element elt) {
 			Resource subject = subjectBuilder.createNode(ctx, elt);
-			String propertyURI = this.propertyURI.evaluateString(ctx, elt);
-			Property property = model.createProperty(propertyURI);
+			String propertyURIValue = this.propertyURI.evaluateString(ctx, elt);
+			Property property = model.createProperty(propertyURIValue);
 			RDFNode object = objectBuilder.createNode(ctx, elt);
 			model.add(subject, property, object);
 		}
 		
 		private void addAllStatements(EvaluationContext ctx, Element elt, List<Element> objects) {
 			Resource subject = subjectBuilder.createNode(ctx, elt);
-			String propertyURI = this.propertyURI.evaluateString(ctx, elt);
-			Property property = model.createProperty(propertyURI);
+			String propertyURIValue = this.propertyURI.evaluateString(ctx, elt);
+			Property property = model.createProperty(propertyURIValue);
 			for (Element e : objects) {
 				RDFNode object = objectBuilder.createNode(ctx, e);
 				model.add(subject, property, object);
@@ -261,9 +261,9 @@ public class StatementLibrary extends FunctionLibrary {
 
 		@Override
 		public List<Element> evaluateList(EvaluationContext ctx, Element elt) {
-			List<Element> objects = this.objects.evaluateList(ctx, elt);
-			statementBuilder.addAllStatements(ctx, elt, objects);
-			return objects;
+			List<Element> objectsValue = this.objects.evaluateList(ctx, elt);
+			statementBuilder.addAllStatements(ctx, elt, objectsValue);
+			return objectsValue;
 		}
 
 		@Override

@@ -219,7 +219,6 @@ public class ExportCadixeJSON extends SectionModule<AlvisAEExportResolvedObjects
 		}
 	
 		private void checkUnsoundReferences() {
-			Logger logger = getLogger(ctx);
 			for (Map.Entry<Element,AnnotationReference> e : annotations.entrySet()) {
 				if (e.getValue().getAnnotationSet() == null)
 					logger.warning("reference to unexported " + e.getKey());

@@ -51,7 +51,7 @@ public abstract class CloneLibrary extends FunctionLibrary {
 			this.source = source;
 		}
 
-		protected abstract List<String> getFeatureKeys(EvaluationContext ctx, Element source);
+		protected abstract List<String> getFeatureKeys(EvaluationContext ctx, Element sourceElt);
 		
 		@Override
 		public Iterator<Element> evaluateElements(EvaluationContext ctx, Element target) {
@@ -59,10 +59,10 @@ public abstract class CloneLibrary extends FunctionLibrary {
 			if (!sourceIt.hasNext()) {
 				return Iterators.emptyIterator();
 			}
-			Element source = sourceIt.next();
-			for (String key : getFeatureKeys(ctx, source)) {
-				if (source.hasFeature(key) && !source.isStaticFeatureKey(key) && !target.isStaticFeatureKey(key)) {
-					for (String value : source.getFeature(key)) {
+			Element sourceElt = sourceIt.next();
+			for (String key : getFeatureKeys(ctx, sourceElt)) {
+				if (sourceElt.hasFeature(key) && !sourceElt.isStaticFeatureKey(key) && !target.isStaticFeatureKey(key)) {
+					for (String value : sourceElt.getFeature(key)) {
 						ctx.registerSetFeature(target, key, value);
 					}
 				}
@@ -198,7 +198,7 @@ public abstract class CloneLibrary extends FunctionLibrary {
 			this.source = source;
 		}
 
-		protected abstract List<String> getArgumentRoles(EvaluationContext ctx, Tuple source);
+		protected abstract List<String> getArgumentRoles(EvaluationContext ctx, Tuple sourceTuple);
 		
 		@Override
 		public Iterator<Element> evaluateElements(EvaluationContext ctx, Element targetElt) {
@@ -211,11 +211,11 @@ public abstract class CloneLibrary extends FunctionLibrary {
 				return Iterators.emptyIterator();
 			}
 			Element sourceElt = sourceIt.next();
-			Tuple source = DownCastElement.toTuple(sourceElt);
-			if (source != null) {
-				for (String role : getArgumentRoles(ctx, source)) {
-					if (source.hasArgument(role)) {
-						ctx.registerSetArgument(target, role, source.getArgument(role));
+			Tuple sourceTuple = DownCastElement.toTuple(sourceElt);
+			if (sourceTuple != null) {
+				for (String role : getArgumentRoles(ctx, sourceTuple)) {
+					if (sourceTuple.hasArgument(role)) {
+						ctx.registerSetArgument(target, role, sourceTuple.getArgument(role));
 					}
 				}
 			}

@@ -106,10 +106,10 @@ public class AlvisRETokens extends AlvisREAnnotations<Resolved> {
 		
 		@Override
 		protected void printInfo(PrintStream out, SectionsMerger merger, EvaluationContext ctx, Element elt) {
-			int start = this.start.evaluateInt(ctx, elt);
-			int end = this.end.evaluateInt(ctx, elt);
-			String form = this.form.evaluateString(ctx, elt);
-			out.format(" %d %d\t%s", merger.correctOffset(start), merger.correctOffset(end), form.replace('\n', ' '));
+			int startValue = this.start.evaluateInt(ctx, elt);
+			int endValue = this.end.evaluateInt(ctx, elt);
+			String formValue = this.form.evaluateString(ctx, elt);
+			out.format(" %d %d\t%s", merger.correctOffset(startValue), merger.correctOffset(endValue), formValue.replace('\n', ' '));
 			for (Evaluator l : layers) {
 				String ls = l.evaluateString(ctx, elt);
 				out.print('|');

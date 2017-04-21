@@ -37,11 +37,11 @@ public class UserFunction {
 		this.body = body;
 	}
 
-	private VariableLibrary getFtorsLibrary(List<String> ftors) {
+	private VariableLibrary getFtorsLibrary(List<String> theFtors) {
 		VariableLibrary result = new VariableLibrary("ftor");
-		for (int i = 1; i < ftors.size(); ++i) {
+		for (int i = 1; i < theFtors.size(); ++i) {
 			String name = this.ftors.get(i);
-			String value = ftors.get(i);
+			String value = theFtors.get(i);
 			VariableLibrary.Variable var = result.newVariable(name);
 			var.set(value);
 		}
@@ -60,25 +60,25 @@ public class UserFunction {
 		return result;
 	}
 	
-	private LibraryResolver getBodyResolver(LibraryResolver resolver, List<String> ftors, List<Expression> args) throws ResolverException {
+	private LibraryResolver getBodyResolver(LibraryResolver resolver, List<String> theFtors, List<Expression> args) throws ResolverException {
 		LibraryResolver result = new LibraryResolver(resolver);
-		VariableLibrary ftorsLib = getFtorsLibrary(ftors);
+		VariableLibrary ftorsLib = getFtorsLibrary(theFtors);
 		VariableLibrary paramsLib = getParamsLibrary(resolver, args);
 		result.addLibrary(ftorsLib);
 		result.addLibrary(paramsLib);
 		return result;
 	}
 	
-	boolean match(List<String> ftors, List<Expression> args) {
+	boolean match(List<String> theFtors, List<Expression> args) {
 		return
-				ftors.size() == this.ftors.size() &&
+				theFtors.size() == this.ftors.size() &&
 				args.size() == params.size() &&
-				ftors.get(0).equals(this.ftors.get(0));
+				theFtors.get(0).equals(this.ftors.get(0));
 	}
 	
-	Evaluator resolve(LibraryResolver resolver, List<String> ftors, List<Expression> args) throws ResolverException {
-		if (match(ftors, args)) {
-			LibraryResolver bodyResolver = getBodyResolver(resolver, ftors, args);
+	Evaluator resolve(LibraryResolver resolver, List<String> theFtors, List<Expression> args) throws ResolverException {
+		if (match(theFtors, args)) {
+			LibraryResolver bodyResolver = getBodyResolver(resolver, theFtors, args);
 			return body.resolveExpressions(bodyResolver);
 		}
 		return null;

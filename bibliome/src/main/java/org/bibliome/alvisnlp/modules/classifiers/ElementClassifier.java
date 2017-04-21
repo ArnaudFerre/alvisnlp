@@ -85,12 +85,12 @@ public abstract class ElementClassifier extends CorpusModule<ElementClassifierRe
 	@TimeThis(task="create-training-set", category=TimerCategory.PREPARE_DATA)
 	protected IdentifiedInstances<Element> getTrainingSet(ProcessingContext<Corpus> ctx, Corpus corpus, EvaluationContext evalCtx, boolean withId) throws IOException {
 		ElementClassifierResolvedObjects resObj = getResolvedObjects();
-		RelationDefinition relationDefinition = resObj.getRelationDefinition();
-		Evaluator examples = resObj.getExamples();
-		IdentifiedInstances<Element> result = relationDefinition.createInstances();
+		RelationDefinition resolvedRelationDefinition = resObj.getRelationDefinition();
+		Evaluator resolvedExamples = resObj.getExamples();
+		IdentifiedInstances<Element> result = resolvedRelationDefinition.createInstances();
 		Logger logger = getLogger(ctx);
     	logger.info("computing training set");
-		for (Element example : Iterators.loop(getExamples(corpus, examples, evalCtx)))
+		for (Element example : Iterators.loop(getExamples(corpus, resolvedExamples, evalCtx)))
 			relationDefinition.addExample(result, evalCtx, example, true, withId);
 		logger.info("# attributes = " + result.numAttributes() + ", # instances = " + result.numInstances());
 		return result;

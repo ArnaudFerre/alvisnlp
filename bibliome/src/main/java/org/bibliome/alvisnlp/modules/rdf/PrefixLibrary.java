@@ -53,8 +53,8 @@ class PrefixLibrary extends FunctionLibrary {
 				return ConstantsLibrary.getInstance(prefix);
 			}
 			Expression nameExpr = args.get(0);
-			Evaluator name = nameExpr.resolveExpressions(resolver);
-			return new StringLibrary.ConcatEvaluator(ConstantsLibrary.getInstance(prefix), name);
+			Evaluator nameEval = nameExpr.resolveExpressions(resolver);
+			return new StringLibrary.ConcatEvaluator(ConstantsLibrary.getInstance(prefix), nameEval);
 		}
 		String localName = ftors.get(0);
 		return ConstantsLibrary.getInstance(prefix + localName);

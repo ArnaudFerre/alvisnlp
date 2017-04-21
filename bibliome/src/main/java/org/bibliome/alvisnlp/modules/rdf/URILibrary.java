@@ -94,8 +94,8 @@ class URILibrary extends FunctionLibrary {
 
 		@Override
 		public Iterator<Element> evaluateElements(EvaluationContext ctx, Element elt) {
-			String uri = this.uri.evaluateString(ctx, elt);
-			resourceMap.set(elt, uri);
+			String uriValue = this.uri.evaluateString(ctx, elt);
+			resourceMap.set(elt, uriValue);
 			return Iterators.singletonIterator(elt);
 		}
 

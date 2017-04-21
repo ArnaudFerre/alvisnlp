@@ -57,9 +57,9 @@ abstract class AbstractSortEvaluator extends AbstractListEvaluator {
 
 	@Override
 	public List<Element> evaluateList(EvaluationContext ctx, Element elt) {
-		Iterator<Element> list = this.list.evaluateElements(ctx, elt);
+		Iterator<Element> iter = this.list.evaluateElements(ctx, elt);
 		List<Element> result = new ArrayList<Element>();
-		Iterators.fill(list, result);
+		Iterators.fill(iter, result);
 		Comparator<Element> comparator = getComparator(ctx);
 		Collections.sort(result, comparator);
 		if (removeDuplicates) {

@@ -123,12 +123,12 @@ public abstract class CommandLineProcessingContext<T extends Annotable> implemen
         getTempDir(module).mkdirs();
         moduleLogger.log(ModuleBase.HIGHLIGHT, "processing");
         String modulePath = module.getPath();
-        Timer<TimerCategory> timer = module.getTimer(this);
+        Timer<TimerCategory> rootTimer = module.getTimer(this);
         if (module.testProcess(this, corpus)) {
-        	timer.start();
+        	rootTimer.start();
         	module.process(this, corpus);
-        	timer.stop();
-            moduleLogger.info("done in " + (timer.getTime() / 1000000) + " ms");
+        	rootTimer.stop();
+            moduleLogger.info("done in " + (rootTimer.getTime() / 1000000) + " ms");
         }
         corpus.hasBeenProcessedBy(modulePath);
         module.clean();
@@ -142,8 +142,8 @@ public abstract class CommandLineProcessingContext<T extends Annotable> implemen
         }
         String dumpName = dumpFile.getAbsolutePath();
         moduleLogger.info("dumping corpus into: " + dumpName);
-    	Timer<TimerCategory> dumpTimer = timer.newChild("dump", TimerCategory.DUMP);
-    	timer.start();
+    	Timer<TimerCategory> dumpTimer = rootTimer.newChild("dump", TimerCategory.DUMP);
+    	rootTimer.start();
     	dumpTimer.start();
         try (Annotable.Dumper<T> dumper = getDumper(dumpFile)) {
         	dumper.dump(corpus);
@@ -154,7 +154,7 @@ public abstract class CommandLineProcessingContext<T extends Annotable> implemen
         }
         finally {
             dumpTimer.stop();
-            timer.stop();
+            rootTimer.stop();
         }
     }
 

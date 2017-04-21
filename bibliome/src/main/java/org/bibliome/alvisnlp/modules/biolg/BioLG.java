@@ -101,10 +101,10 @@ public abstract class BioLG extends SectionModule<SectionResolvedObjects> implem
 		int nWords = 0;
 		List<Layer> currentBlock = new ArrayList<Layer>();
 		result.add(currentBlock);
-		Evaluator sentenceFilter = getLibraryResolver(ctx).resolveNullable(this.sentenceFilter);
+		Evaluator resolvedSentenceFilter = getLibraryResolver(ctx).resolveNullable(this.sentenceFilter);
 		for (Section sec : Iterators.loop(sectionIterator(evalCtx, corpus))) {
 			for (Layer sentence : sec.getSentences(wordLayer, sentenceLayer)) {
-				if (!sentenceFilter.getFilter(evalCtx).accept(sentence.getSentenceAnnotation()))
+				if (!resolvedSentenceFilter.getFilter(evalCtx).accept(sentence.getSentenceAnnotation()))
 					continue;
 				int n = sentence.size();
 				if (nWords + n > wordNumberLimit) {
@@ -266,8 +266,9 @@ public abstract class BioLG extends SectionModule<SectionResolvedObjects> implem
 	private static File getParseScript(File tmpDir) throws IOException {
 		File result = new File(tmpDir, "parse.sh");
 		// same ClassLoader as this class
-		InputStream is = BioLG.class.getResourceAsStream("parse.sh");
-		Files.copy(is, result, 1024, true);
+		try (InputStream is = BioLG.class.getResourceAsStream("parse.sh")) {
+			Files.copy(is, result, 1024, true);
+		}
 		result.setExecutable(true);
 		return result;
 	}
@@ -681,12 +682,11 @@ public abstract class BioLG extends SectionModule<SectionResolvedObjects> implem
 		 * java.io.BufferedReader, java.io.BufferedReader)
 		 */
 		@Override
-		public void processOutput(BufferedReader out, BufferedReader err)
-				throws ModuleException {
+		public void processOutput(BufferedReader biolgOut, BufferedReader biolgErr) throws ModuleException {
 			try {
 				Logger logger = getLogger(ctx);
 				logger.fine("bioLG standard error:");
-				for (String line = err.readLine(); line != null; line = err.readLine()) {
+				for (String line = biolgErr.readLine(); line != null; line = biolgErr.readLine()) {
 					logger.fine("    " + line);
 				}
 				logger.fine("end of bioLG standard error");
@@ -789,11 +789,10 @@ public abstract class BioLG extends SectionModule<SectionResolvedObjects> implem
 		 * java.io.BufferedReader, java.io.BufferedReader)
 		 */
 		@Override
-		public void processOutput(BufferedReader out, BufferedReader err)
-				throws ModuleException {
+		public void processOutput(BufferedReader lp2lpOut, BufferedReader lp2lpErr) throws ModuleException {
 			try {
 				PrintStream ps = new PrintStream(this.out);
-				for (String line = out.readLine(); line != null; line = out.readLine()) {
+				for (String line = lp2lpOut.readLine(); line != null; line = lp2lpOut.readLine()) {
 					ps.println(line);
 				}
 				ps.close();
@@ -805,7 +804,7 @@ public abstract class BioLG extends SectionModule<SectionResolvedObjects> implem
 			try {
 				Logger logger = getLogger(ctx);
 				logger.fine("lp2lp standard error:");
-				for (String line = err.readLine(); line != null; line = err.readLine()) {
+				for (String line = lp2lpErr.readLine(); line != null; line = lp2lpErr.readLine()) {
 					logger.fine("    " + line);
 				}
 				logger.fine("end of lp2lp standard error");

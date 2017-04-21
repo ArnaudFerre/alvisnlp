@@ -139,7 +139,7 @@ public abstract class AnnotationDefinition {
 				}
 			}
 			result.put("properties", props);
-			JSONArray sources = new JSONArray();
+			JSONArray jSources = new JSONArray();
 			for (Element e : Iterators.loop(this.sources.evaluateElements(ctx.evalCtx, elt))) {
 				String id = sourceId.evaluateString(ctx.evalCtx, e);
 				int asetId = sourceAnnotationSet.evaluateInt(ctx.evalCtx, e);
@@ -147,9 +147,9 @@ public abstract class AnnotationDefinition {
 				srcObj.put("ann_id", id);
 				srcObj.put("set_id", asetId);
 				srcObj.put("status", 1);
-				sources.add(srcObj);
+				jSources.add(srcObj);
 			}
-			result.put("sources", sources);
+			result.put("sources", jSources);
 			fillObject(result, elt, offset, ctx);
 			return result;
 		}

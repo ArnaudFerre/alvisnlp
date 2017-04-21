@@ -132,14 +132,14 @@ public abstract class AbstractParamConverter<T> implements ParamConverter {
      */
     private void setConverterProperties(Element xmlValue) {
         if (xmlValue.hasAttribute(SEPARATOR_ATTRIBUTE)) {
-            String separator = xmlValue.getAttribute(SEPARATOR_ATTRIBUTE);
-            if (!separator.isEmpty())
-                setSeparator(separator.charAt(0));
+            String separatorValue = xmlValue.getAttribute(SEPARATOR_ATTRIBUTE);
+            if (!separatorValue.isEmpty())
+                setSeparator(separatorValue.charAt(0));
         }
         if (xmlValue.hasAttribute(QUALIFIER_ATTRIBUTE)) {
-            String qualifier = xmlValue.getAttribute(QUALIFIER_ATTRIBUTE);
-            if (!qualifier.isEmpty())
-                setSeparator(qualifier.charAt(0));
+            String qualifierValue = xmlValue.getAttribute(QUALIFIER_ATTRIBUTE);
+            if (!qualifierValue.isEmpty())
+                setQualifier(qualifierValue.charAt(0));
         }
         if (xmlValue.hasAttribute(TRIM_VALUE_ATTRIBUTE)) {
             try {

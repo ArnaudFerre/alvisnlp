@@ -107,10 +107,10 @@ public class Assert extends CorpusModule<AssertResolvedObjects> {
 				resObj.targetVariable.set(elt);
 				if (!resObj.assertion.evaluateBoolean(evalCtx, elt)) {
 					failures++;
-					String message = resObj.getMessage(evalCtx, elt);
-					logger.warning(message);
+					String messageValue = resObj.getMessage(evalCtx, elt);
+					logger.warning(messageValue);
 					if (out != null) {
-						out.println(message);
+						out.println(messageValue);
 					}
 					if (stopAt != null && failures == stopAt.intValue())
 						break;

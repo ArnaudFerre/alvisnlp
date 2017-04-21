@@ -46,11 +46,11 @@ public class IndexedFields implements Resolvable<IndexedFieldsEvaluator> {
 
 	@Override
 	public IndexedFieldsEvaluator resolveExpressions(LibraryResolver resolver) throws ResolverException {
-		Evaluator instances = this.instances.resolveExpressions(resolver);
-		Evaluator fieldName = this.fieldName.resolveExpressions(resolver);
-		Evaluator fieldValue = this.fieldValue.resolveExpressions(resolver);
-		IndexedTokensEvaluator indexedTokens = this.indexedTokens.resolveExpressions(resolver);
-		List<IndexedTokensEvaluator> indexedAnnotations = resolver.resolveList(this.indexedAnnotations);
-		return new IndexedFieldsEvaluator(instances, fieldName, fieldValue, indexedTokens, indexedAnnotations, normalizationOptions);
+		Evaluator resolvedInstances = this.instances.resolveExpressions(resolver);
+		Evaluator resolvedFieldName = this.fieldName.resolveExpressions(resolver);
+		Evaluator resolvedFieldValue = this.fieldValue.resolveExpressions(resolver);
+		IndexedTokensEvaluator resolvedIndexedTokens = this.indexedTokens.resolveExpressions(resolver);
+		List<IndexedTokensEvaluator> resolvedIndexedAnnotations = resolver.resolveList(this.indexedAnnotations);
+		return new IndexedFieldsEvaluator(resolvedInstances, resolvedFieldName, resolvedFieldValue, resolvedIndexedTokens, resolvedIndexedAnnotations, normalizationOptions);
 	}
 }

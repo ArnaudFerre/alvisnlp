@@ -99,7 +99,7 @@ public abstract class TypeLibrary extends FunctionLibrary {
 		}
 
 		@Override
-		public Boolean visit(Corpus corpus, Void param) {
+		public Boolean visit(Corpus theCorpus, Void param) {
 			return this.corpus;
 		}
 

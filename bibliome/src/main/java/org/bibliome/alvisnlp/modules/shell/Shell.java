@@ -88,11 +88,11 @@ public abstract class Shell extends CorpusModule<ResolvedObjects> implements Doc
 	private ConsoleReader getConsoleReader(ProcessingContext<Corpus> ctx) throws IOException {
 		ConsoleReader result = new ConsoleReader();
 		File tmpDir = getTempDir(ctx);
-		File historyFile = this.historyFile == null ? new File(tmpDir, "history") : this.historyFile;
-		if (!historyFile.exists()) {
-			historyFile.getParentFile().mkdirs();
+		File histFile = this.historyFile == null ? new File(tmpDir, "history") : this.historyFile;
+		if (!histFile.exists()) {
+			histFile.getParentFile().mkdirs();
 		}
-		result.getHistory().setHistoryFile(historyFile);
+		result.getHistory().setHistoryFile(histFile);
 		result.setDefaultPrompt(prompt);
 		return result;
 	}

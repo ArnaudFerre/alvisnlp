@@ -95,13 +95,13 @@ public class AlvisRERelations extends AlvisREAnnotations<Resolved> {
 		@Override
 		protected void printInfo(PrintStream out, SectionsMerger merger, EvaluationContext ctx, Element elt) {
 			for (Element p : Iterators.loop(arguments.evaluateElements(ctx, elt))) {
-				String role = this.role.evaluateString(ctx, p);
+				String roleValue = this.role.evaluateString(ctx, p);
 				String argId = merger.getId(p);
-				out.format(" %s:%s", role, argId);
+				out.format(" %s:%s", roleValue, argId);
 			}
 			if (this.label != null) {
-				String label = this.label.evaluateString(ctx, elt);
-				out.format(" label:%s", label);
+				String labelValue = this.label.evaluateString(ctx, elt);
+				out.format(" label:%s", labelValue);
 			}
 		}
 	}

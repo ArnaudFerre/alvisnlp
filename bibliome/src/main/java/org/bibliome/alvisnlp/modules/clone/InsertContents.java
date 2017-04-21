@@ -98,14 +98,14 @@ public abstract class InsertContents extends SectionModule<InsertContentsResolve
 	}
 	
 	private void cloneSection(Logger logger, Section oldSec, Map<Element,Element> map) {
-		InsertPoint[] points = getInsertPoints(logger, oldSec);
-		String newContents = getNewContents(points, oldSec);
+		InsertPoint[] insertPoints = getInsertPoints(logger, oldSec);
+		String newContents = getNewContents(insertPoints, oldSec);
 
 		Section newSec = new Section(this, oldSec.getDocument(), oldSec.getName(), newContents);
 		putMapping(map, oldSec, newSec);
 
 		for (Layer layer : oldSec.getAllLayers()) {
-			cloneLayer(newSec, points, layer, map);
+			cloneLayer(newSec, insertPoints, layer, map);
 		}
 		
 		for (Relation oldRel : oldSec.getAllRelations()) {
@@ -170,9 +170,9 @@ public abstract class InsertContents extends SectionModule<InsertContentsResolve
 		List<InsertPoint> result = new ArrayList<InsertPoint>();
 		EvaluationContext evalCtx = new EvaluationContext(logger);
 		for (Element elt : Iterators.loop(resObj.points.evaluateElements(evalCtx, sec))) {
-			int offset = resObj.offset.evaluateInt(evalCtx, elt);
-			String insert = resObj.insert.evaluateString(evalCtx, elt);
-			InsertPoint point = new InsertPoint(offset, insert);
+			int offsetValue = resObj.offset.evaluateInt(evalCtx, elt);
+			String insertValue = resObj.insert.evaluateString(evalCtx, elt);
+			InsertPoint point = new InsertPoint(offsetValue, insertValue);
 			result.add(point);
 		}
 		return result;
@@ -197,11 +197,11 @@ public abstract class InsertContents extends SectionModule<InsertContentsResolve
 		newElt.addMultiFeatures(oldElt.getFeatures());
 	}
 
-	private void cloneLayer(Section newSec, InsertPoint[] points, Layer oldLayer, Map<Element,Element> map) {
+	private void cloneLayer(Section newSec, InsertPoint[] insertPoints, Layer oldLayer, Map<Element,Element> map) {
 		Layer newLayer = new Layer(newSec, oldLayer.getName());
 		for (Annotation oldA : oldLayer) {
-			int start = getOffset(points, oldA.getStart(), true);
-			int end = getOffset(points, oldA.getEnd(), false);
+			int start = getOffset(insertPoints, oldA.getStart(), true);
+			int end = getOffset(insertPoints, oldA.getEnd(), false);
 			Annotation newA = new Annotation(this, newLayer, start, end);
 			putMapping(map, oldA, newA);
 		}

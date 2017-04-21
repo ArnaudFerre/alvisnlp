@@ -82,7 +82,7 @@ class LibraryModel {
 			packageName = fullName.substring(0, dot);
 			simpleName = fullName.substring(dot + 1);
 		}
-		boolean implementsResolveFunction = false;
+		boolean implementsResolveFunction0 = false;
 		int ord = 0;
 		for (ExecutableElement method : ElementFilter.methodsIn(ctx.elementUtils.getAllMembers(libraryElement))) {
 			Function functionAnnotation = method.getAnnotation(Function.class);
@@ -93,9 +93,9 @@ class LibraryModel {
 				addFunctionModel(fun);
 			}
 			if (ctx.isResolveFunctionImplementation(method, libraryElement))
-				implementsResolveFunction = true;
+				implementsResolveFunction0 = true;
 		}
-		this.implementsResolveFunction = implementsResolveFunction;
+		this.implementsResolveFunction = implementsResolveFunction0;
 		for (String extSpec : annotation.externalStatic()) {
 			int eq = extSpec.indexOf('=');
 			String extFullSig = extSpec;
@@ -199,14 +199,14 @@ class LibraryModel {
 	void generateDocumentation(ModelContext ctx) throws SAXException, IOException, XPathExpressionException, TransformerFactoryConfigurationError {
 		String docResourceBundleName = getDocResourceBundleName();
 		int dot = docResourceBundleName.lastIndexOf('.');
-		String packageName = docResourceBundleName.substring(0, dot);
+		String docPackageName = docResourceBundleName.substring(0, dot);
 		String fileName = docResourceBundleName.substring(dot + 1) + ".xml";
 		FileObject fo;
 		try {
-			fo = ctx.getFiler().getResource(StandardLocation.SOURCE_PATH, packageName, fileName);
+			fo = ctx.getFiler().getResource(StandardLocation.SOURCE_PATH, docPackageName, fileName);
 		}
 		catch (FileNotFoundException fnfe) {
-			fo = ctx.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, packageName, fileName);
+			fo = ctx.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, docPackageName, fileName);
 			ctx.note("generating " + fo.getName());
 			PrintWriter out = new PrintWriter(fo.openOutputStream());
 			XMLUtils.writeDOMToFile(getDocumentation(XMLUtils.docBuilder), null, out);

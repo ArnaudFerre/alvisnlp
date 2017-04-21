@@ -165,8 +165,8 @@ public abstract class AlvisREPrepareCrossValidation extends AbstractAlvisRE<Alvi
 		}
 	}
 
-	private void writeAFile(alvisnlp.corpus.Document doc, File outDir, SectionsMerger merger, EvaluationContext ctx) throws IOException {
-		OutputFile aFile = new OutputFile(outDir, doc.getId() + ".a");
+	private void writeAFile(alvisnlp.corpus.Document doc, File aDir, SectionsMerger merger, EvaluationContext ctx) throws IOException {
+		OutputFile aFile = new OutputFile(aDir, doc.getId() + ".a");
 		TargetStream aStream = new FileTargetStream("UTF-8", aFile);
 		try (PrintStream out = aStream.getPrintStream()) {
 			do {
@@ -203,13 +203,13 @@ public abstract class AlvisREPrepareCrossValidation extends AbstractAlvisRE<Alvi
 		}
 	}
 
-	private SectionsMerger writeInputFiles(Logger logger, EvaluationContext ctx, Corpus corpus, File outDir) throws IOException {
-		logger.info("writing input files in " + outDir.getAbsolutePath());
+	private SectionsMerger writeInputFiles(Logger logger, EvaluationContext ctx, Corpus corpus, File txtDir) throws IOException {
+		logger.info("writing input files in " + txtDir.getAbsolutePath());
 		SectionsMerger result = new SectionsMerger(this, sectionSeparator);
 		for (alvisnlp.corpus.Document doc : Iterators.loop(documentIterator(ctx, corpus))) {
 			if (result.setDocument(ctx, doc)) {
-				writeAFile(doc, outDir, result, ctx);
-				writeTxtFile(doc, outDir, result);
+				writeAFile(doc, txtDir, result, ctx);
+				writeTxtFile(doc, txtDir, result);
 			}
 		}
 		return result;

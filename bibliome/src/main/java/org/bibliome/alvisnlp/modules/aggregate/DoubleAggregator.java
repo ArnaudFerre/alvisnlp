@@ -56,8 +56,8 @@ class DoubleAggregator extends Aggregator {
 		@Override
 		public void incorporateEntry(Object value, EvaluationContext ctx, Element elt) {
 			AtomicLong longValue = (AtomicLong) value;
-			double item = this.item.evaluateDouble(ctx, elt);
-			double newValue = operator.compute(longValue.doubleValue(), item);
+			double itemValue = this.item.evaluateDouble(ctx, elt);
+			double newValue = operator.compute(longValue.doubleValue(), itemValue);
 			longValue.set((long) newValue);
 		}
 

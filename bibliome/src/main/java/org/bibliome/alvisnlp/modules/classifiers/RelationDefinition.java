@@ -98,12 +98,12 @@ public class RelationDefinition implements Resolvable<RelationDefinition>, Check
 			boolean count = bagDef.isCount();
 			String prefix = bagDef.getPrefix();
 			for (String value : bagDef.getValueSpace()) {
-				String name = prefix + value;
+				String fullName = prefix + value;
 				AttributeDefinition a;
 				if (count)
-					a = new CountBagAttributeDefinition(name);
+					a = new CountBagAttributeDefinition(fullName);
 				else
-					a = new BooleanBagAttributeDefinition(name);
+					a = new BooleanBagAttributeDefinition(fullName);
 				int index = unsafeAddAttribute(a);
 				bagDef.setAttributeIndex(value, index);
 			}

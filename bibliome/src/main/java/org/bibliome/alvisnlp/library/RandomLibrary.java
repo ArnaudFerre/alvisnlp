@@ -50,10 +50,10 @@ public abstract class RandomLibrary extends FunctionLibrary {
 	}
 	
 	@Function
-	public double init(double seed) {
-		this.seed = (long) seed;
+	public double init(double aSeed) {
+		this.seed = (long) aSeed;
 		random.setSeed(this.seed);
-		return seed;
+		return aSeed;
 	}
 	
 	@Function
@@ -105,8 +105,8 @@ public abstract class RandomLibrary extends FunctionLibrary {
 		public int evaluateInt(EvaluationContext ctx, Element elt) {
 			if (maxInt == null)
 				return random.nextInt();
-			int maxInt = this.maxInt.evaluateInt(ctx, elt);
-			return random.nextInt(maxInt);
+			int maxIntValue = this.maxInt.evaluateInt(ctx, elt);
+			return random.nextInt(maxIntValue);
 		}
 
 		@Override

@@ -34,9 +34,9 @@ class ElementMatch {
 
 	void searchMatch(Iterator<Element> candidates, ElementSimilarity sim) {
 		for (Element candidate : Iterators.loop(candidates)) {
-			double score = sim.similarity(first, candidate);
-			if (score > this.score) {
-				this.score = score;
+			double s = sim.similarity(first, candidate);
+			if (s > this.score) {
+				this.score = s;
 				second = candidate;
 			}
 		}

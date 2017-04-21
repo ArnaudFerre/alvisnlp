@@ -92,12 +92,12 @@ public abstract class RunProlog extends CorpusModule<RunPrologResolvedObjects> i
 		EvaluationContext evalCtx = new EvaluationContext(logger);
 		EvaluationContext actionCtx = new EvaluationContext(logger, this);
 		try {
-			Theory theory = buildTheory(ctx);
+			Theory tupTheory = buildTheory(ctx);
 			Timer<TimerCategory> runTimer = getTimer(ctx, "run", TimerCategory.MODULE, true);
 			for (Element e : Iterators.loop(resObj.target.evaluateElements(evalCtx, corpus))) {
 				Prolog engine = new Prolog();
 				JavaLibrary javaLibrary = (JavaLibrary) engine.loadLibrary("alice.tuprolog.lib.JavaLibrary");
-				engine.setTheory(theory);
+				engine.setTheory(tupTheory);
 				for (FactDefinition f : resObj.facts)
 					engine.addTheory(f.getTheory(javaLibrary, evalCtx, e));
 				resObj.solveInfoLibrary.setJavaLibrary(javaLibrary);

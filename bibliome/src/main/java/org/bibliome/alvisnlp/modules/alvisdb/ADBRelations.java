@@ -111,18 +111,18 @@ public class ADBRelations extends ADBElements {
 		
 		@Override
 		protected Document fillDocument(Logger logger, Document result, EvaluationContext ctx, Element elt) {
-			Iterator<Element> args = this.args.evaluateElements(ctx, elt);
-			if (!args.hasNext()) {
+			Iterator<Element> argIt = this.args.evaluateElements(ctx, elt);
+			if (!argIt.hasNext()) {
 				logger.warning("relation has no arguments (ignoring the relation)");
 				return null;
 			}
-			Element left = args.next();
-			if (!args.hasNext()) {
+			Element left = argIt.next();
+			if (!argIt.hasNext()) {
 				logger.warning("relation has only one argument (ignoring the relation)");
 				return null;
 			}
-			Element right = args.next();
-			if (args.hasNext()) {
+			Element right = argIt.next();
+			if (argIt.hasNext()) {
 				logger.warning("relation has more than two arguments (ignoring the extra arguments)");
 			}
 			fillArgFields(result, LuceneUtils.Fields.ArgSide.LEFT, ctx, left);

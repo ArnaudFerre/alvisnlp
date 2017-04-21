@@ -166,13 +166,13 @@ public abstract class TabularReader extends CorpusModule<TabularReaderResolvedOb
 		private List<String> entry = Collections.emptyList();
 		private int line = 0;
 
-		private void startSource(String source) {
+		private void startSource(@SuppressWarnings("hiding") String source) {
 			this.source = source;
 			entry = Collections.emptyList();
 			line = 0;
 		}
 		
-		private void startLine(int line, List<String> entry) {
+		private void startLine(@SuppressWarnings("hiding") int line, @SuppressWarnings("hiding") List<String> entry) {
 			this.line = line;
 			this.entry = entry;
 		}
@@ -248,10 +248,10 @@ public abstract class TabularReader extends CorpusModule<TabularReaderResolvedOb
 
 			@Override
 			public List<Element> evaluateList(EvaluationContext ctx, Element elt) {
-				int from = this.from.evaluateInt(ctx, elt);
-				int to = this.to == null ? entry.size() : this.to.evaluateInt(ctx, elt);
-				List<Element> result = new ArrayList<Element>(to - from);
-				for (String s : entry.subList(from, to)) {
+				int fromValue = this.from.evaluateInt(ctx, elt);
+				int toValue = this.to == null ? entry.size() : this.to.evaluateInt(ctx, elt);
+				List<Element> result = new ArrayList<Element>(toValue - fromValue);
+				for (String s : entry.subList(fromValue, toValue)) {
 					result.add(new ColumnElement(elt, s));
 				}
 				return result;

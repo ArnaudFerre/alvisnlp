@@ -363,7 +363,7 @@ public class XMLWriter2 extends CorpusModule<XMLWriterResolvedObjects> {
 			return true;
 		}
 		
-		private void makeText(Node parent, int pos) {
+		private void makeText(Node parent, @SuppressWarnings("hiding") int pos) {
 			if (pos <= this.pos)
 				return;
 			Text text = document.createTextNode(contents.substring(this.pos, pos));

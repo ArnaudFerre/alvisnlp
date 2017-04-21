@@ -53,8 +53,8 @@ class IntAggregator extends Aggregator {
 		@Override
 		public void incorporateEntry(Object value, EvaluationContext ctx, Element elt) {
 			AtomicInteger intValue = (AtomicInteger) value;
-			int item = this.item.evaluateInt(ctx, elt);
-			int newValue = operator.compute(intValue.get(), item);
+			int itemValue = this.item.evaluateInt(ctx, elt);
+			int newValue = operator.compute(intValue.get(), itemValue);
 			intValue.set(newValue);
 		}
 

@@ -50,6 +50,7 @@ class HTMLBuilderFragmentTagIterator implements FragmentTagIterator<String,Annot
 		this.classes = classes;
 	}
 	
+	@SuppressWarnings("hiding")
 	void init(Document document, Element contentsDiv) {
 		this.document = document;
 		this.contentsDiv = contentsDiv;

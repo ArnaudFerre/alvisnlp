@@ -65,10 +65,11 @@ public class FactDefinition implements Resolvable<FactDefinition>, NameUser {
 
 	@Override
 	public FactDefinition resolveExpressions(LibraryResolver resolver) throws ResolverException {
-		List<Pair<Evaluator,EvaluationType>> args = new ArrayList<Pair<Evaluator,EvaluationType>>();
-		for (Pair<Expression,EvaluationType> p : this.args)
-			args.add(new Pair<Evaluator,EvaluationType>(p.first.resolveExpressions(resolver), p.second));
-		return new FactDefinition(facts, ctor, this.args, facts.resolveExpressions(resolver), ctor.resolveExpressions(resolver), args);
+		List<Pair<Evaluator,EvaluationType>> theResolvedArgs = new ArrayList<Pair<Evaluator,EvaluationType>>();
+		for (Pair<Expression,EvaluationType> p : this.args) {
+			theResolvedArgs.add(new Pair<Evaluator,EvaluationType>(p.first.resolveExpressions(resolver), p.second));
+		}
+		return new FactDefinition(facts, ctor, this.args, facts.resolveExpressions(resolver), ctor.resolveExpressions(resolver), theResolvedArgs);
 	}
 	
 	@Override
@@ -88,17 +89,17 @@ public class FactDefinition implements Resolvable<FactDefinition>, NameUser {
 	
 	public Theory getTheory(JavaLibrary javaLibrary, EvaluationContext evalCtx, Element elt) throws InvalidTheoryException {
 		List<Element> factElements = this.resolvedFacts.evaluateList(evalCtx, elt);
-		Struct[] facts = new Struct[factElements.size()];
-		for (int i = 0; i < facts.length; ++i) {
-			facts[i] = buildFact(javaLibrary, evalCtx, factElements.get(i));
+		Struct[] factsValue = new Struct[factElements.size()];
+		for (int i = 0; i < factsValue.length; ++i) {
+			factsValue[i] = buildFact(javaLibrary, evalCtx, factElements.get(i));
 		}
-		return new Theory(new Struct(facts));
+		return new Theory(new Struct(factsValue));
 	}
 
 	private Struct buildFact(JavaLibrary javaLibrary, EvaluationContext evalCtx, Element elt) {
-		String ctor = this.resolvedCtor.evaluateString(evalCtx, elt);
-		Term[] args = getArguments(javaLibrary, evalCtx, elt);
-		return new Struct(ctor, args);
+		String ctorValue = this.resolvedCtor.evaluateString(evalCtx, elt);
+		Term[] argsValue = getArguments(javaLibrary, evalCtx, elt);
+		return new Struct(ctorValue, argsValue);
 	}
 
 	private Term[] getArguments(JavaLibrary javaLibrary, EvaluationContext evalCtx, Element elt) {

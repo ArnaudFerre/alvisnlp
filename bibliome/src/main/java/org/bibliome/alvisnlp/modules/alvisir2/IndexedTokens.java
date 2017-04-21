@@ -46,12 +46,12 @@ public class IndexedTokens implements Resolvable<IndexedTokensEvaluator> {
 
 	@Override
 	public IndexedTokensEvaluator resolveExpressions(LibraryResolver resolver) throws ResolverException {
-		Evaluator instances = this.instances.resolveExpressions(resolver);
-		Evaluator text = this.text.resolveExpressions(resolver);
-		TokenFragmentsEvaluator tokenFragments = this.tokenFragments.resolveExpressions(resolver);
-		Evaluator identifier = this.identifier.resolveExpressions(resolver);
-		Map<String,Evaluator> arguments = this.arguments.resolveExpressions(resolver);
-		Map<String,Evaluator> properties = this.properties.resolveExpressions(resolver);
-		return new IndexedTokensEvaluator(instances, text, tokenFragments, identifier, arguments, properties);
+		Evaluator resolvedInstances = this.instances.resolveExpressions(resolver);
+		Evaluator resolvedText = this.text.resolveExpressions(resolver);
+		TokenFragmentsEvaluator resolvedTokenFragments = this.tokenFragments.resolveExpressions(resolver);
+		Evaluator resolvedIdentifier = this.identifier.resolveExpressions(resolver);
+		Map<String,Evaluator> resolvedArguments = this.arguments.resolveExpressions(resolver);
+		Map<String,Evaluator> resolvedProperties = this.properties.resolveExpressions(resolver);
+		return new IndexedTokensEvaluator(resolvedInstances, resolvedText, resolvedTokenFragments, resolvedIdentifier, resolvedArguments, resolvedProperties);
 	}
 }

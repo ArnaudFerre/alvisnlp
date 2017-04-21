@@ -72,17 +72,17 @@ public abstract class SelectLibrary extends FunctionLibrary {
 			if (list.isEmpty())
 				return Collections.emptyList();
 			int len = list.size();
-			int start = this.start.evaluateInt(ctx, elt);
+			int startValue = this.start.evaluateInt(ctx, elt);
 			if (end == null) {
-				Integer index = getSingleIndex(len, start);
+				Integer index = getSingleIndex(len, startValue);
 				if (index == null) {
 					return Collections.emptyList();
 				}
 				return Collections.singletonList(list.get(index));
 			}
-			int startIndex = getStartIndex(len, start);
-			int end = this.end.evaluateInt(ctx, elt);
-			int endIndex = getEndIndex(len, startIndex, end);
+			int startIndex = getStartIndex(len, startValue);
+			int endValue = this.end.evaluateInt(ctx, elt);
+			int endIndex = getEndIndex(len, startIndex, endValue);
 			return list.subList(startIndex, endIndex);
 		}
 

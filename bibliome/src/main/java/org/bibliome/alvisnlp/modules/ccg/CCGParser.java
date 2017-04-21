@@ -279,14 +279,14 @@ public abstract class CCGParser extends CCGBase<CCGResolvedObjects> implements T
 			try {
 				getLogger(ctx).info("reading Stanford Script output");
 				TargetStream target = new FileTargetStream(internalEncoding, this.output);
-				PrintStream output = target.getPrintStream();
-				while (true) {
-					String line = out.readLine();
-					if (line == null)
-						break;
-					output.println(line);
+				try (PrintStream finalOut = target.getPrintStream()) {
+					while (true) {
+						String line = out.readLine();
+						if (line == null)
+							break;
+						finalOut.println(line);
+					}
 				}
-				output.close();
 			}
 			catch (FileNotFoundException fnfe) {
 				rethrow(fnfe);
@@ -509,7 +509,7 @@ public abstract class CCGParser extends CCGBase<CCGResolvedObjects> implements T
 
 
 	public class Dependency {
-		private final String dep;
+		private final String label;
 		private final Annotation a1;
 		private final Annotation a2;
 
@@ -518,7 +518,7 @@ public abstract class CCGParser extends CCGBase<CCGResolvedObjects> implements T
 			super();
 			this.a1 = a1;
 			this.a2 = a2;
-			this.dep = dep;
+			this.label = dep;
 		}
 
 		void addTuple(Relation rel, Annotation sentence) {
@@ -526,26 +526,26 @@ public abstract class CCGParser extends CCGBase<CCGResolvedObjects> implements T
 			t.setArgument(headRole, a1);
 			t.setArgument(dependentRole, a2);
 			t.setArgument(sentenceRole, sentence);
-			t.addFeature(labelFeatureName, dep);
+			t.addFeature(labelFeatureName, label);
 		}
 
 		@Override
 		public String toString() {
 			return Strings.join(new String[] {
-					dep, getArg1(), getPOS1(), getSTag1(), getArg2(), getPOS2(), getSTag2()
+					label, getArg1(), getPOS1(), getSTag1(), getArg2(), getPOS2(), getSTag2()
 			}, '\t');
 		}
 
 		public boolean matchArg1(String dep, Annotation w) {
-			return a1 == w && this.dep.equals(dep);
+			return a1 == w && this.label.equals(dep);
 		}
 
 		public boolean matchArg2(String dep, Annotation w) {
-			return a2 == w && this.dep.equals(dep);
+			return a2 == w && this.label.equals(dep);
 		}
 
-		public String getDep() {
-			return this.dep;
+		public String getLabel() {
+			return this.label;
 		}
 
 		public String getArg1() {
@@ -616,7 +616,7 @@ public abstract class CCGParser extends CCGBase<CCGResolvedObjects> implements T
 
 	Collection<Dependency> convertDependency(ProcessingContext<Corpus> ctx, List<Dependency> dependencies, int i) {
 		Dependency curr = dependencies.get(i);
-		String currDep= curr.getDep();
+		String currDep= curr.getLabel();
 		String currArg1= curr.getArg1();
 		String currArg2= curr.getArg2();
 		String currPOS1= curr.getPOS1();
@@ -959,13 +959,13 @@ public abstract class CCGParser extends CCGBase<CCGResolvedObjects> implements T
                         // than this represents a coordination
                         // CCG does a factoring of all the possibilities, want to condense this into a single relation for each pair
                         // with the last term in the conjunction as the head for all the COORD relations
-                        if (!currArg1.equals(",") && (prev == null || !prev.getDep().equals("conj") || prev.getArg1().equals(","))) {
+                        if (!currArg1.equals(",") && (prev == null || !prev.getLabel().equals("conj") || prev.getArg1().equals(","))) {
                                 List<Dependency> result = new ArrayList<Dependency>();
                                 String conjunct= currArg1;
                                 Collection<Annotation> seen = new HashSet<Annotation>();
                                 seen.add(curr.a2);
                                 for (Dependency nextConj : dependencies.subList(i + 1, dependencies.size())) {
-                                        if (!nextConj.getDep().equals("conj"))
+                                        if (!nextConj.getLabel().equals("conj"))
                                                 break;
 					skip++;
                                         Annotation nextW = nextConj.a2;
@@ -1010,13 +1010,13 @@ public abstract class CCGParser extends CCGBase<CCGResolvedObjects> implements T
 			// [CONJ , word1] + [CONJ , word2] = [APPOS word1 word2], the relations just before and just after
 			// the conj bust not be conjuntions themselves
 			else if (currArg1.equals(",")) { 
-				if ((prev == null || !prev.getDep().equals("conj")) && (next != null && next.getDep().equals("conj") && (next.a1.getStart() == curr.a1.getStart())) && (nextNext == null || !nextNext.getDep().equals("conj"))) {
+				if ((prev == null || !prev.getLabel().equals("conj")) && (next != null && next.getLabel().equals("conj") && (next.a1.getStart() == curr.a1.getStart())) && (nextNext == null || !nextNext.getLabel().equals("conj"))) {
 					return Collections.singleton(fromArg2Arg2("APPOS:" + getLP2LPPOS(currPOS2, currSTag2)+ "-" + getLP2LPPOS(next.getPOS2(), next.getSTag2()), curr, next));
 				}
-				if ((next != null && next.getDep().equals("conj") && (next.a1.getStart() == curr.a1.getStart())) && (nextNext == null || !nextNext.getDep().equals("conj") || nextNext.a1.getStart() != next.a1.getStart())) {
+				if ((next != null && next.getLabel().equals("conj") && (next.a1.getStart() == curr.a1.getStart())) && (nextNext == null || !nextNext.getLabel().equals("conj") || nextNext.a1.getStart() != next.a1.getStart())) {
 					return Collections.singleton(fromArg2Arg2("APPOS:" + getLP2LPPOS(currPOS2, currSTag2)+ "-" + getLP2LPPOS(next.getPOS2(), next.getSTag2()), curr, next));
 				}
-				if((prev == null || !prev.getDep().equals("conj")) && (next != null && next.getDep().equals("conj") && (next.a1.getStart() == curr.a1.getStart())) && (nextNext.getDep().equals("conj") && (!nextNext.getArg1().equals(",") || (nextNext.a1.getStart() != next.a1.getStart())))) {
+				if((prev == null || !prev.getLabel().equals("conj")) && (next != null && next.getLabel().equals("conj") && (next.a1.getStart() == curr.a1.getStart())) && (nextNext.getLabel().equals("conj") && (!nextNext.getArg1().equals(",") || (nextNext.a1.getStart() != next.a1.getStart())))) {
 					return Collections.singleton(fromArg2Arg2("APPOS:" + getLP2LPPOS(currPOS2, currSTag2)+ "-" + getLP2LPPOS(next.getPOS2(), next.getSTag2()), curr, next));
 				}
 

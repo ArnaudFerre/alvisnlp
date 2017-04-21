@@ -123,7 +123,6 @@ public class TrainingElementClassifier extends PredictionElementClassifier {
 
 	private void crossValidate(ProcessingContext<Corpus> ctx, Classifier classifier, IdentifiedInstances<Element> instances) throws Exception {
 		TargetStream evaluationFile = getEvaluationFile();
-    	String foldFeatureKey = getFoldFeatureKey();
     	String predictedClassFeatureKey = getPredictedClassFeatureKey();
     	boolean withId = (foldFeatureKey != null) || (predictedClassFeatureKey != null);
 		if ((evaluationFile == null) && !withId)
@@ -142,13 +141,13 @@ public class TrainingElementClassifier extends PredictionElementClassifier {
     	instances.stratify(crossFolds);
     	Evaluation evaluation = new Evaluation(instances);
 		Integer requiredCrossFolds = getCrossFolds();
-		int crossFolds = requiredCrossFolds == null ? instances.numInstances() : requiredCrossFolds;
-    	for (int i = 0; i < crossFolds; i++) {
+		int effectiveCrossFolds = requiredCrossFolds == null ? instances.numInstances() : requiredCrossFolds;
+    	for (int i = 0; i < effectiveCrossFolds; i++) {
     		logger.fine("fold " + (i+1));
-    		Instances crossTrainingSet = instances.trainCV(crossFolds, i, random);
+    		Instances crossTrainingSet = instances.trainCV(effectiveCrossFolds, i, random);
     		evaluation.setPriors(crossTrainingSet);
     		classifier.buildClassifier(crossTrainingSet);
-    		Instances crossTestSet = instances.testCV(crossFolds, i);
+    		Instances crossTestSet = instances.testCV(effectiveCrossFolds, i);
     		double[] predictions = evaluation.evaluateModel(classifier, crossTestSet);
     		if (withId) {
     			String s = Integer.toString(i);

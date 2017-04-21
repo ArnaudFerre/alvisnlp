@@ -62,6 +62,7 @@ public class NewCount extends CorpusModule<ResolvedObjects> {
 		return new ResolvedObjects(ctx, this);
 	}
 
+	@SuppressWarnings("hiding")
 	@Override
 	public void process(ProcessingContext<Corpus> ctx, Corpus corpus) throws ModuleException {
 		Logger logger = getLogger(ctx);
@@ -93,15 +94,16 @@ public class NewCount extends CorpusModule<ResolvedObjects> {
 			}
 			
 			if (tfidfFile != null) {
-				PrintStream out = tfidfFile.getPrintStream();
-				if (headers)
-					out.println("DOCUMENT\tTERM\tTF\tIDF\tTFIDF");
-				for (Map.Entry<Element,TfIdfStats> e1 : tfidf.entrySet()) {
-					Element grp = e1.getKey();
-					Comparator<TfIdf> comparator = new TfIdf.TfIdfComparator<TfIdf>();
-					for (Map.Entry<String,TfIdf> e2 : e1.getValue().entryList(comparator)) {
-						TfIdf c = e2.getValue();
-						out.println(grp.toString() + '\t' + e2.getKey() + '\t' + c.getTf() + '\t' + c.getIdf() + '\t' + c.getTfIdf());
+				try (PrintStream out = tfidfFile.getPrintStream()) {
+					if (headers)
+						out.println("DOCUMENT\tTERM\tTF\tIDF\tTFIDF");
+					for (Map.Entry<Element,TfIdfStats> e1 : tfidf.entrySet()) {
+						Element grp = e1.getKey();
+						Comparator<TfIdf> comparator = new TfIdf.TfIdfComparator<TfIdf>();
+						for (Map.Entry<String,TfIdf> e2 : e1.getValue().entryList(comparator)) {
+							TfIdf c = e2.getValue();
+							out.println(grp.toString() + '\t' + e2.getKey() + '\t' + c.getTf() + '\t' + c.getIdf() + '\t' + c.getTfIdf());
+						}
 					}
 				}
 			}

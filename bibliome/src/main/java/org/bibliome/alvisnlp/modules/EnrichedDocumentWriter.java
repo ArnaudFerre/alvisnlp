@@ -119,7 +119,7 @@ public class EnrichedDocumentWriter extends SectionModule<SectionResolvedObjects
     	outDir.mkdir();
     	int n = 0;
     	Timer<TimerCategory> writeTimer = getTimer(ctx, "write-xml", TimerCategory.PREPARE_DATA, false);
-    	String urlPrefix = Strings.escapeXML(this.urlPrefix);
+    	String escapedUrlPrefix = Strings.escapeXML(this.urlPrefix);
     	try {
     		MessageDigest md5 = MessageDigest.getInstance("MD5");
     		for (Document doc : Iterators.loop(documentIterator(evalCtx, corpus))) {
@@ -145,7 +145,7 @@ public class EnrichedDocumentWriter extends SectionModule<SectionResolvedObjects
     				getLogger(ctx).warning("document " + doc.getId() + " has no feature " + urlSuffixFeature);
     				urlSuffix = "";
     			}
-    			out.printf("<urls><url>%s%s</url></urls></acquisitionData>", urlPrefix, urlSuffix);
+    			out.printf("<urls><url>%s%s</url></urls></acquisitionData>", escapedUrlPrefix, urlSuffix);
     			out.printf("<originalDocument mimeType=\"text/xml\" charSet=\"UTF-8\">%s</originalDocument><canonicalDocument>%s</canonicalDocument>", contents, contents);
     			out.print("<metaData>");
     			for (String metaKey : metaTrans.keySet()) {

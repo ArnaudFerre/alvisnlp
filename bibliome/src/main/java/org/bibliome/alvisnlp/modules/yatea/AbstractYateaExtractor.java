@@ -121,8 +121,8 @@ public abstract class AbstractYateaExtractor<S extends SectionResolvedObjects> e
 		}
 		try {
 			YateaExtractorExternal yateaExt = new YateaExtractorExternal(ctx);
-			InputFile testifiedTerminology = this.testifiedTerminology == null ? null : this.testifiedTerminology.ensureFile(this, ctx, corpus);
-			yateaExt.createRCFile(testifiedTerminology);
+			InputFile testifiedTerminologyFile = this.testifiedTerminology == null ? null : this.testifiedTerminology.ensureFile(this, ctx, corpus);
+			yateaExt.createRCFile(testifiedTerminologyFile);
 			yateaExt.createInput(evalCtx, corpus);
 			callExternal(ctx, "yatea", yateaExt, "UTF-8", "call-yatea.sh");
 		}
@@ -494,7 +494,7 @@ public abstract class AbstractYateaExtractor<S extends SectionResolvedObjects> e
     	}
     }
     
-    protected Pair<Properties,Properties> createConfig(InputFile testifiedTerminology) throws IOException {
+    protected Pair<Properties,Properties> createConfig(InputFile testifiedTerminologyFile) throws IOException {
     	Properties defaultConfig = new Properties();
     	Properties options = new Properties();
     	readYateaConfig(rcFile, defaultConfig, options);
@@ -504,7 +504,7 @@ public abstract class AbstractYateaExtractor<S extends SectionResolvedObjects> e
     	updateProperty(defaultConfig, "LOCALE_DIR", localeDir);
     	updateProperty(options, "output-path", outputDir);
     	updateProperty(options, "language", language);
-    	updateProperty(options, "termino", testifiedTerminology);
+    	updateProperty(options, "termino", testifiedTerminologyFile);
     	updateProperty(options, "suffix", suffix);
     	return new Pair<Properties,Properties>(defaultConfig, options);
     }
@@ -519,8 +519,8 @@ public abstract class AbstractYateaExtractor<S extends SectionResolvedObjects> e
 			this.ctx = ctx;
 		}
         
-        private void createRCFile(InputFile testifiedTerminology) throws IOException {
-        	Pair<Properties,Properties> p = createConfig(testifiedTerminology);
+        private void createRCFile(InputFile testifiedTerminologyFile) throws IOException {
+        	Pair<Properties,Properties> p = createConfig(testifiedTerminologyFile);
         	Properties defaultConfig = p.first;
         	Properties options = p.second;
         	File tmpDir = getTempDir(ctx);

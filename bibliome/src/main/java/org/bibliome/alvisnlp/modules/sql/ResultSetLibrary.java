@@ -117,8 +117,8 @@ public class ResultSetLibrary extends FunctionLibrary {
 		@Override
 		public boolean evaluateBoolean(EvaluationContext ctx, Element elt) {
 			try {
-				int columnIndex = this.columnIndex.evaluateInt(ctx, elt);
-				return resultSet.getBoolean(columnIndex);
+				int columnIndexValue = this.columnIndex.evaluateInt(ctx, elt);
+				return resultSet.getBoolean(columnIndexValue);
 			}
 			catch (SQLException e) {
 				throw new RuntimeException(e);
@@ -128,8 +128,8 @@ public class ResultSetLibrary extends FunctionLibrary {
 		@Override
 		public int evaluateInt(EvaluationContext ctx, Element elt) {
 			try {
-				int columnIndex = this.columnIndex.evaluateInt(ctx, elt);
-				return resultSet.getInt(columnIndex);
+				int columnIndexValue = this.columnIndex.evaluateInt(ctx, elt);
+				return resultSet.getInt(columnIndexValue);
 			}
 			catch (SQLException e) {
 				throw new RuntimeException(e);
@@ -139,8 +139,8 @@ public class ResultSetLibrary extends FunctionLibrary {
 		@Override
 		public double evaluateDouble(EvaluationContext ctx, Element elt) {
 			try {
-				int columnIndex = this.columnIndex.evaluateInt(ctx, elt);
-				return resultSet.getDouble(columnIndex);
+				int columnIndexValue = this.columnIndex.evaluateInt(ctx, elt);
+				return resultSet.getDouble(columnIndexValue);
 			}
 			catch (SQLException e) {
 				throw new RuntimeException(e);
@@ -150,8 +150,8 @@ public class ResultSetLibrary extends FunctionLibrary {
 		@Override
 		public String evaluateString(EvaluationContext ctx, Element elt) {
 			try {
-				int columnIndex = this.columnIndex.evaluateInt(ctx, elt);
-				return resultSet.getString(columnIndex);
+				int columnIndexValue = this.columnIndex.evaluateInt(ctx, elt);
+				return resultSet.getString(columnIndexValue);
 			}
 			catch (SQLException e) {
 				throw new RuntimeException(e);

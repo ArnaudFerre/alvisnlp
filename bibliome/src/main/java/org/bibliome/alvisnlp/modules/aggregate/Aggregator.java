@@ -38,11 +38,11 @@ public abstract class Aggregator implements Resolvable<Aggregator.Resolved> {
 
 	@Override
 	public Aggregator.Resolved resolveExpressions(LibraryResolver resolver) throws ResolverException {
-		Evaluator item = this.item.resolveExpressions(resolver);
-		return resolveExpressions(resolver, item);
+		Evaluator resolvedItem = this.item.resolveExpressions(resolver);
+		return resolveExpressions(resolver, resolvedItem);
 	}
 
-	protected abstract Aggregator.Resolved resolveExpressions(LibraryResolver resolver, Evaluator item);
+	protected abstract Aggregator.Resolved resolveExpressions(LibraryResolver resolver, Evaluator resolvedItem);
 
 	public static abstract class Resolved implements NameUser {
 		protected final Evaluator item;

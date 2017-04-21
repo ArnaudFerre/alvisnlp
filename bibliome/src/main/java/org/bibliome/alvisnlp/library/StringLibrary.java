@@ -344,10 +344,10 @@ public abstract class StringLibrary extends FunctionLibrary {
 
 		@Override
 		public boolean evaluateBoolean(EvaluationContext ctx, Element elt) {
-			String target = this.target.evaluateString(ctx, elt);
+			String targetValue = this.target.evaluateString(ctx, elt);
 			for (Evaluator e : set) {
 				String s = e.evaluateString(ctx, elt);
-				if (target.equals(s)) {
+				if (targetValue.equals(s)) {
 					return true;
 				}
 			}

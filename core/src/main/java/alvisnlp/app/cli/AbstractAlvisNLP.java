@@ -616,7 +616,7 @@ public abstract class AbstractAlvisNLP<A extends Annotable,M extends ModuleFacto
 	}
 
 	@Override
-	public final boolean processArgument(String planFile) throws CLIOConversionException {
+	public final boolean processArgument(@SuppressWarnings("hiding") String planFile) throws CLIOConversionException {
 		setPlanFile(planFile);
 		return false;
 	}

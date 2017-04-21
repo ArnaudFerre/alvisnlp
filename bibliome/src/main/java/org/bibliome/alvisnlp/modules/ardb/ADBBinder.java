@@ -65,7 +65,8 @@ public class ADBBinder {
     private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss z";
 
     //-- -------------------------------------------------------------------- --
-    private static Connection getConnection(ADBBinder params) throws ProcessingException {
+    @SuppressWarnings("resource")
+	private static Connection getConnection(ADBBinder params) throws ProcessingException {
         try {
 //    		Class.forName("org.postgresql.Driver");
     		Class.forName("org.postgresql.Driver", true, ADBBinder.class.getClassLoader());
@@ -127,7 +128,8 @@ public class ADBBinder {
         }
     }
 
-    public static int executeStatementAndGetId(PreparedStatement statement) throws ProcessingException {
+    @SuppressWarnings("resource")
+	public static int executeStatementAndGetId(PreparedStatement statement) throws ProcessingException {
         try {
             int inserted = statement.executeUpdate();
             if (inserted == 0) {
@@ -223,7 +225,8 @@ public class ADBBinder {
         connection = null;
     }
 
-    public void addAnnReferencesToNakedSecondaryAnnotation(int dbAnnId, Tuple secAnnReferencesHolder, Map<String, Integer> dbAnIdByAlvisAnnId) throws ProcessingException {
+    @SuppressWarnings("resource")
+	public void addAnnReferencesToNakedSecondaryAnnotation(int dbAnnId, Tuple secAnnReferencesHolder, Map<String, Integer> dbAnIdByAlvisAnnId) throws ProcessingException {
         PreparedStatement addAnnRefStatement = getPreparedStatement(PreparedStatementId.AddAnnotationReference);
         try {
             int ordNum = 0;
@@ -243,7 +246,8 @@ public class ADBBinder {
         }
     }
 
-    public int addNakedSecondaryAnnotation(AnnotationKind kind, String annotationType, Map<String, List<String>> features) throws ProcessingException {
+    @SuppressWarnings("resource")
+	public int addNakedSecondaryAnnotation(AnnotationKind kind, String annotationType, Map<String, List<String>> features) throws ProcessingException {
         PreparedStatement addAnnStatement = getPreparedStatement(PreparedStatementId.AddAnnotation);
         setAddAnnotationStatementValues(addAnnStatement, kind, IMPORTED_ANNSET_NAME, ALVISNLP_NS, annotationType);
         int ann_id = executeStatementAndGetId(addAnnStatement);
@@ -251,7 +255,8 @@ public class ADBBinder {
         return ann_id;
     }
 
-    public int addTextBoundAnnotation(int doc_id, String asp_id, List<Annotation> fragments, String annotationType) throws ProcessingException {
+    @SuppressWarnings("resource")
+	public int addTextBoundAnnotation(int doc_id, String asp_id, List<Annotation> fragments, String annotationType) throws ProcessingException {
         PreparedStatement addAnnStatement = getPreparedStatement(PreparedStatementId.AddAnnotation);
         setAddAnnotationStatementValues(addAnnStatement, AnnotationKind.TextBound, IMPORTED_ANNSET_NAME, ALVISNLP_NS, annotationType);
         int ann_id = executeStatementAndGetId(addAnnStatement);
@@ -268,7 +273,8 @@ public class ADBBinder {
         return ann_id;
     }
 
-    public int addDocument(Document doc) throws ProcessingException {
+    @SuppressWarnings("resource")
+	public int addDocument(Document doc) throws ProcessingException {
         try {
             PreparedStatement addDocStatement = getPreparedStatement(PreparedStatementId.AddDocument);
             int doc_id = executeStatementAndGetId(addDocStatement);
@@ -293,7 +299,8 @@ public class ADBBinder {
         }
     }
 
-    public void linkDocumentToCorpus(int corpus_id, int doc_id) throws ProcessingException {
+    @SuppressWarnings("resource")
+	public void linkDocumentToCorpus(int corpus_id, int doc_id) throws ProcessingException {
         try {
             PreparedStatement statement = getPreparedStatement(PreparedStatementId.AddDocumentCorpus);
             statement.setInt(1, corpus_id);
@@ -308,9 +315,10 @@ public class ADBBinder {
         }
     }
 
-    public void addAspect(int doc_id, String asp_id, Section section) throws ProcessingException {
+	public void addAspect(int doc_id, String asp_id, Section section) throws ProcessingException {
         try {
-            PreparedStatement addAspectStatement = getPreparedStatement(PreparedStatementId.AddAspect);
+            @SuppressWarnings("resource")
+			PreparedStatement addAspectStatement = getPreparedStatement(PreparedStatementId.AddAspect);
             addAspectStatement.setInt(1, doc_id);
             addAspectStatement.setString(2, asp_id);
             addAspectStatement.setString(3, "SECTION");
@@ -319,7 +327,8 @@ public class ADBBinder {
             addAspectStatement.setInt(5, contents.length());
             addAspectStatement.executeUpdate();
 
-            PreparedStatement addAnnStatement = getPreparedStatement(PreparedStatementId.AddAnnotation);
+            @SuppressWarnings("resource")
+			PreparedStatement addAnnStatement = getPreparedStatement(PreparedStatementId.AddAnnotation);
             setAddAnnotationStatementValues(addAnnStatement, AnnotationKind.TextBound, IMPORTED_ANNSET_NAME, ALVISNLP_NS, AspectMeta_AnnType);
             int ann_id = executeStatementAndGetId(addAnnStatement);
 
@@ -333,7 +342,8 @@ public class ADBBinder {
         }
     }
 
-    public int addDocumentScopeAnnotation(int doc_id, String annType, Map<String, List<String>> features) throws ProcessingException {
+    @SuppressWarnings("resource")
+	public int addDocumentScopeAnnotation(int doc_id, String annType, Map<String, List<String>> features) throws ProcessingException {
         PreparedStatement addAnnStatement = getPreparedStatement(PreparedStatementId.AddAnnotation);
         setAddAnnotationStatementValues(addAnnStatement, AnnotationKind.TextBound, IMPORTED_ANNSET_NAME, ALVISNLP_NS, annType);
         int ann_id = executeStatementAndGetId(addAnnStatement);
@@ -353,7 +363,8 @@ public class ADBBinder {
         }
     }
 
-    private PreparedStatement getPreparedStatement(PreparedStatementId statementId) throws ProcessingException {
+    @SuppressWarnings("resource")
+	private PreparedStatement getPreparedStatement(PreparedStatementId statementId) throws ProcessingException {
         if (preparedStatement.containsKey(statementId)) {
             return preparedStatement.get(statementId);
         }
@@ -393,7 +404,8 @@ public class ADBBinder {
         return statement;
     }
 
-    public int addCorpus(@SuppressWarnings("unused") /*XXX*/ Corpus corpus) throws ProcessingException {
+    @SuppressWarnings("resource")
+	public int addCorpus(@SuppressWarnings("unused") /*XXX*/ Corpus corpus) throws ProcessingException {
         try {
             PreparedStatement statement = getPreparedStatement(PreparedStatementId.AddCorpus);
             DateFormat df = new SimpleDateFormat(DATE_FORMAT);
@@ -426,7 +438,8 @@ public class ADBBinder {
     private void addAnnotationProps(int owningAnnotation_id, Map<String, List<String>> features, String namespace) throws ProcessingException {
         try {
             boolean somePropsAdded = false;
-            PreparedStatement addPropertyStatement = getPreparedStatement(PreparedStatementId.AddProperty);
+            @SuppressWarnings("resource")
+			PreparedStatement addPropertyStatement = getPreparedStatement(PreparedStatementId.AddProperty);
             for (Entry<String, List<String>> featureEntry : features.entrySet()) {
                 int propnum = 1;
                 String key = featureEntry.getKey();
@@ -457,7 +470,8 @@ public class ADBBinder {
         }
     }
 
-    private int addTextScope(int owningAnnotation_id, int doc_id, String asp_id, Integer spanStart, Integer spanEnd, int fragNum, String ref_type) throws ProcessingException {
+    @SuppressWarnings("resource")
+	private int addTextScope(int owningAnnotation_id, int doc_id, String asp_id, Integer spanStart, Integer spanEnd, int fragNum, String ref_type) throws ProcessingException {
         try {
             PreparedStatement addTextScopeStatement = getPreparedStatement(PreparedStatementId.AddTextScope);
 

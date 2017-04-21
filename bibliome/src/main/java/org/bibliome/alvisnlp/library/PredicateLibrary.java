@@ -76,18 +76,18 @@ public abstract class PredicateLibrary extends FunctionLibrary {
 
 		@Override
 		public Iterator<Element> evaluateElements(EvaluationContext ctx, Element elt) {
-			int start = this.start.evaluateInt(ctx, elt);
-			Integer end = this.end == null ? null : this.end.evaluateInt(ctx, elt);
+			int startValue = this.start.evaluateInt(ctx, elt);
+			Integer endValue = this.end == null ? null : this.end.evaluateInt(ctx, elt);
 			Collection<Iterator<Element>> c = new ArrayList<Iterator<Element>>();
-			for (int i = start; isContinue(ctx, elt, i, end); ++i) {
+			for (int i = startValue; isContinue(ctx, elt, i, endValue); ++i) {
 				var.set(i);
 				c.add(fun.evaluateElements(ctx, elt));
 			}
 			return Iterators.flatten(c.iterator());
 		}
 		
-		private boolean isContinue(EvaluationContext ctx, Element elt, int i, Integer end) {
-			if ((end != null) && (i > end))
+		private boolean isContinue(EvaluationContext ctx, Element elt, int i, Integer endValue) {
+			if ((endValue != null) && (i > endValue))
 				return false;
 			return condition.evaluateBoolean(ctx, elt);
 		}

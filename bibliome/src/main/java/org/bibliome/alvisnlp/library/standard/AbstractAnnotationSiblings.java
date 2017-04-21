@@ -103,10 +103,10 @@ abstract class AbstractAnnotationSiblings extends AbstractListEvaluator implemen
 	@Override
 	public List<Element> visit(Annotation a, Pair<EvaluationContext,Element> param) {
 		Section sec = a.getSection();
-		String layerName = getLayerName(param.first, param.second);
-		if (!sec.hasLayer(layerName))
+		String layerNameValue = getLayerName(param.first, param.second);
+		if (!sec.hasLayer(layerNameValue))
 			return Collections.emptyList();
-		Layer layer = getAnnotations(sec.getLayer(layerName), a);
+		Layer layer = getAnnotations(sec.getLayer(layerNameValue), a);
 		if (excludeSelf) {
 			layer.remove(a);
 		}

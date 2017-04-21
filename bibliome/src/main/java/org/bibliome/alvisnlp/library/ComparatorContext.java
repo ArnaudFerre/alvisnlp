@@ -36,33 +36,33 @@ public class ComparatorContext {
 		other = library.newVariable(null);
 	}
 	
-	public boolean evaluateBoolean(Evaluator comp, EvaluationContext ctx, Element elt, Element other) {
-		this.other.set(other);
+	public boolean evaluateBoolean(Evaluator comp, EvaluationContext ctx, Element elt, Element otherElt) {
+		this.other.set(otherElt);
 		return comp.evaluateBoolean(ctx, elt);
 	}
 	
-	public int evaluateInt(Evaluator comp, EvaluationContext ctx, Element elt, Element other) {
-		this.other.set(other);
+	public int evaluateInt(Evaluator comp, EvaluationContext ctx, Element elt, Element otherElt) {
+		this.other.set(otherElt);
 		return comp.evaluateInt(ctx, elt);
 	}
 	
-	public double evaluateDouble(Evaluator comp, EvaluationContext ctx, Element elt, Element other) {
-		this.other.set(other);
+	public double evaluateDouble(Evaluator comp, EvaluationContext ctx, Element elt, Element otherElt) {
+		this.other.set(otherElt);
 		return comp.evaluateDouble(ctx, elt);
 	}
 	
-	public String evaluateString(Evaluator comp, EvaluationContext ctx, Element elt, Element other) {
-		this.other.set(other);
+	public String evaluateString(Evaluator comp, EvaluationContext ctx, Element elt, Element otherElt) {
+		this.other.set(otherElt);
 		return comp.evaluateString(ctx, elt);
 	}
 	
-	public Iterator<Element> evaluateElements(Evaluator comp, EvaluationContext ctx, Element elt, Element other) {
-		this.other.set(other);
+	public Iterator<Element> evaluateElements(Evaluator comp, EvaluationContext ctx, Element elt, Element otherElt) {
+		this.other.set(otherElt);
 		return comp.evaluateElements(ctx, elt);
 	}
 	
-	public List<Element> evaluateList(Evaluator comp, EvaluationContext ctx, Element elt, Element other) {
-		this.other.set(other);
+	public List<Element> evaluateList(Evaluator comp, EvaluationContext ctx, Element elt, Element otherElt) {
+		this.other.set(otherElt);
 		return comp.evaluateList(ctx, elt);
 	}
 }

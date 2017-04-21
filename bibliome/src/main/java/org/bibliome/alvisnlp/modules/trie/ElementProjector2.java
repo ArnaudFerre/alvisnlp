@@ -61,7 +61,6 @@ public abstract class ElementProjector2 extends TrieProjector<ElementProjectorRe
 		
 		ElementProjectorResolvedObjects(ElementProjector2 module, ProcessingContext<Corpus> ctx) throws ResolverException {
 			super(ctx, module);
-			LibraryResolver rootResolver = module.getLibraryResolver(ctx);
 			this.entries = module.entries.resolveExpressions(rootResolver);
 			this.key = module.key.resolveExpressions(rootResolver);
 			VariableLibrary varLib = new VariableLibrary("entry");
@@ -85,9 +84,9 @@ public abstract class ElementProjector2 extends TrieProjector<ElementProjectorRe
 		ElementProjectorResolvedObjects resObj = getResolvedObjects();
 		EvaluationContext evalCtx = new EvaluationContext(logger);
 		for (Element entry : Iterators.loop(resObj.entries.evaluateElements(evalCtx, corpus))) {
-			String key = resObj.key.evaluateString(evalCtx, entry);
+			String keyValue = resObj.key.evaluateString(evalCtx, entry);
 //			System.err.println("key = " + key);
-			trie.addEntry(key, entry);
+			trie.addEntry(keyValue, entry);
 		}
 	}
 

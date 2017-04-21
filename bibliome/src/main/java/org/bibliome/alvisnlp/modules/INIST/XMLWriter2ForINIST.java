@@ -175,6 +175,7 @@ public class XMLWriter2ForINIST extends CorpusModule<ResolvedObjects> {
 		return new ResolvedObjects(ctx, this);
 	}
 
+	@SuppressWarnings("hiding")
 	@Override
     public void process(ProcessingContext<Corpus> ctx, Corpus corpus) throws ModuleException {
         try {
@@ -409,7 +410,7 @@ public class XMLWriter2ForINIST extends CorpusModule<ResolvedObjects> {
             return true;
         }
 
-        private void makeText(Node parent, int pos) {
+        private void makeText(Node parent, @SuppressWarnings("hiding") int pos) {
             if (pos <= this.pos) {
                 return;
             }

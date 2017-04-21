@@ -80,19 +80,19 @@ public class RelationDefinition extends AnnotationDefinition implements Resolvab
 				Iterator<Element> argIt = args.evaluateElements(ctx.evalCtx, elt);
 				while (argIt.hasNext()) {
 					Element arg = argIt.next();
-					String role = this.role.evaluateString(ctx.evalCtx, arg);
+					String roleValue = this.role.evaluateString(ctx.evalCtx, arg);
 //					System.err.println("  arg = " + arg);
 //					System.err.println("  this.role = " + this.role);
 //					System.err.println("  role = " + role);
 //					System.err.println("  arg.@role = " + arg.getLastFeature("role"));
-					relation.put(role, ctx.getAnnotationReference(arg).asJSON());
+					relation.put(roleValue, ctx.getAnnotationReference(arg).asJSON());
 				}
 			}
 			for (Map.Entry<String,Evaluator> e : argsMap.entrySet()) {
 				Evaluator expr = e.getValue();
-				Iterator<Element> args = expr.evaluateElements(ctx.evalCtx, elt);
-				if (args.hasNext()) {
-					Element arg = args.next();
+				Iterator<Element> argValues = expr.evaluateElements(ctx.evalCtx, elt);
+				if (argValues.hasNext()) {
+					Element arg = argValues.next();
 					relation.put(e.getKey(), ctx.getAnnotationReference(arg).asJSON());
 				}
 			}

@@ -118,7 +118,12 @@ public abstract class EnjuParser2 extends SectionModule<EnjuParserResolvedObject
 	private Collection<Layer> getSentences(Logger logger, Corpus corpus) {
 		EnjuParserResolvedObjects resObj = getResolvedObjects();
 		EvaluationContext evalCtx = new EvaluationContext(logger);
-		return getSentences(evalCtx, corpus, resObj.sentenceFilter);
+		Collection<Layer> result = new ArrayList<Layer>();
+		for (Section sec : Iterators.loop(sectionIterator(evalCtx, corpus)))
+			for (Layer sent : sec.getSentences(wordLayerName, sentenceLayerName))
+				if (resObj.sentenceFilter.evaluateBoolean(evalCtx, sent.getSentenceAnnotation()))
+					result.add(sent);
+		return result;
 	}
 	
 	@TimeThis(task="prepare-corpus", category=TimerCategory.PREPARE_DATA)
@@ -127,15 +132,6 @@ public abstract class EnjuParser2 extends SectionModule<EnjuParserResolvedObject
 		File tempDir = getTempDir(ctx);
 		logger.info("preparing corpus for enju");
 		return new EnjuExternal2(this, tempDir, logger, sentences);
-	}
-
-	private Collection<Layer> getSentences(EvaluationContext ctx, Corpus corpus, Evaluator sentenceFilter) {
-		Collection<Layer> result = new ArrayList<Layer>();
-		for (Section sec : Iterators.loop(sectionIterator(ctx, corpus)))
-			for (Layer sent : sec.getSentences(wordLayerName, sentenceLayerName))
-				if (sentenceFilter.evaluateBoolean(ctx, sent.getSentenceAnnotation()))
-					result.add(sent);
-		return result;
 	}
 
 	@Override

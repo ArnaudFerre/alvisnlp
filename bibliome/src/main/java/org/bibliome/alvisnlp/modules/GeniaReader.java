@@ -116,7 +116,7 @@ public abstract class GeniaReader extends CorpusModule<ResolvedObjects> implemen
 		Logger logger = getLogger(ctx);
 		String name = sourcePath.getStreamName(r);
 		String id = getBasename(name.replaceFirst("\\.txt$", ""));
-		String aDir = this.aDir == null ? getDirname(name) : this.aDir.getAbsolutePath();
+		String aDirEffecive = this.aDir == null ? getDirname(name) : this.aDir.getAbsolutePath();
 		Document doc = Document.getDocument(this, corpus, id);
 		StringCat strcat = new StringCat();
 		while (true) {
@@ -131,7 +131,7 @@ public abstract class GeniaReader extends CorpusModule<ResolvedObjects> implemen
 				logger.warning("file " + name + " does not end with .txt, will not read any .a1 or .a2 file");
 				return;
 			}
-			String prefix = aDir + File.separatorChar + id;
+			String prefix = aDirEffecive + File.separatorChar + id;
 			GeniaFileLines fl = new GeniaFileLines(ctx);
 			try {
 				if (readA1)
