@@ -56,9 +56,9 @@ public abstract class TEESTrain extends TEESMapper {
 			// marshaling
 			prepareTEESCorpora(ctx, corpus);
 			TEESTrainExternal teesTrainExt = new TEESTrainExternal(ctx);
-			jaxbm.marshal(this.corpora.get(this.getTrainSetValue()), teesTrainExt.getTrainInput());
-			jaxbm.marshal(this.corpora.get(this.getDevSetValue()), teesTrainExt.getDevInput());
-			jaxbm.marshal(this.corpora.get(this.getTestSetValue()), teesTrainExt.getTestInput());
+			jaxbm.marshal(this.corpora.safeGet(this.getTrainSetValue()), teesTrainExt.getTrainInput());
+			jaxbm.marshal(this.corpora.safeGet(this.getDevSetValue()), teesTrainExt.getDevInput());
+			jaxbm.marshal(this.corpora.safeGet(this.getTestSetValue()), teesTrainExt.getTestInput());
 
 			logger.info("TEES training ");
 			callExternal(ctx, "run-tees-train", teesTrainExt, INTERNAL_ENCODING, "tees-train.sh");
@@ -178,8 +178,9 @@ public abstract class TEESTrain extends TEESMapper {
 			//
 			script = new File(tmp, "train.sh");
 			// same ClassLoader as this class
-			InputStream is = TEESTrain.class.getResourceAsStream("train.sh");
-			Files.copy(is, script, 1024, true);
+			try (InputStream is = TEESTrain.class.getResourceAsStream("train.sh")) {
+				Files.copy(is, script, 1024, true);
+			}
 			script.setExecutable(true);
 		}
 
