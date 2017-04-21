@@ -105,7 +105,7 @@ public abstract class TEESClassify extends TEESMapper {
 		//		} 
 		//		this.corpora.put(this.getSetFeature(), new CorpusTEES());
 		this.createTheTeesCorpus(ctx, corpusAlvis);	
-		return this.corpora.get(this.getDefaultSetValue());
+		return this.corpora.safeGet(this.getDefaultSetValue());
 	}
 	
 	/**

@@ -80,15 +80,17 @@ public abstract class TEESTrain extends TEESMapper {
 //		EvaluationContext evalCtx = new EvaluationContext(logger);
 		
 //		logger.info("preparing the train, dev, test corpus");
-		this.corpora.put(this.getTrainSetValue(), new CorpusTEES());
-		this.corpora.put(this.getDevSetValue(), new CorpusTEES());
-		this.corpora.put(this.getTestSetValue(), new CorpusTEES());
+//		this.corpora.put(this.getTrainSetValue(), new CorpusTEES());
+//		this.corpora.put(this.getDevSetValue(), new CorpusTEES());
+//		this.corpora.put(this.getTestSetValue(), new CorpusTEES());
 		
 		logger.info("creating the train, dev, test corpus");
 		createTheTeesCorpus(ctx, corpusAlvis);
 
-		if(this.corpora.get(this.getTrainSetValue()).getDocument().size()==0 || this.corpora.get(this.getDevSetValue()).getDocument().size()==0 || this.corpora.get(this.getTestSetValue()).getDocument().size()==0){
-			processingException("could not do training : train, dev or test is empty");
+		for (String set : new String[] { getTrainSetValue(), getDevSetValue(), getTestSetValue() }) {
+			if (corpora.safeGet(set).getDocument().isEmpty()) {
+				processingException("empty set: " + set);
+			}
 		}
 	}
 
